@@ -5,29 +5,40 @@ using UnityEditor;
 
 public class TilemapStyx : EditorWindow
 {
-    private readonly List<MapObject> _palette = new List<MapObject>();
+    private enum SORTING_LAYERS { Background, Midground, Foreground};
+    private enum COLLISION_LAYERS { Collision, NoCollision };
+
+    private readonly List<MapObject> _backgroundPalette = new List<MapObject>();
+    private readonly List<MapObject> _midgroundPalette = new List<MapObject>();
+    private readonly List<MapObject> _foregroundPalette = new List<MapObject>();
+    private List<MapObject> _currentPalette;
     private readonly Vector2 _cellSize = new Vector2(1.0f, 1.0f);
-    private readonly string[] layersSelection = new string[] { "Background", "Midground", "Foreground" };
-    private readonly string[] collisionSelection = new string[] { "Collision", "No Collision" };
     private readonly string _rootPath = "Assets/Editor Default Resources";
     private readonly string _backgroundPath = "Assets/Editor Default Resources/Background";
     private readonly string _midgroundPath = "Assets/Editor Default Resources/Midground";
+    private readonly string _foregroundPath = "Assets/Editor Default Resources/Foreground";
     private readonly int _paletteColumnSize = 3;
     private GameObject _tilemapStyxRoot;
     private GameObject _tilemapStyxRootPrefab;
+    private SORTING_LAYERS _sortingLayer;
+    private COLLISION_LAYERS _collisionLayer;
     private Vector2 tileGridScrollPosition;
     private Color _cellColor;
     private int _paletteIndex;
-    private int _layerIndex;
-    private int _collisionIndex;
     private int _brushSize;
     private bool _paintMode;
+    private bool _ruleTileMode;
 
 
     [MenuItem("Window/Tilemap Styx")]
     public static void ShowWindow()
     {
         GetWindow(typeof(TilemapStyx));
+    }
+
+    private void Awake()
+    {
+        _currentPalette = _backgroundPalette;
     }
 
     void Update()
@@ -47,7 +58,7 @@ public class TilemapStyx : EditorWindow
     {
         EditorGUILayout.Space();
         GUILayout.BeginHorizontal("box");
-        GUILayout.Toggle(_paintMode, "Palette", "Button", GUILayout.Height(40f));
+        GUILayout.Toggle(_paintMode, "Palettes", "Button", GUILayout.Height(40f));
         GUILayout.Toggle(_paintMode, "Rule Tiles", "Button", GUILayout.Height(40f));
         GUILayout.Toggle(_paintMode, "Shortcuts", "Button", GUILayout.Height(40f));
         GUILayout.EndHorizontal();
@@ -63,6 +74,7 @@ public class TilemapStyx : EditorWindow
             _paintMode = GUILayout.Toggle(_paintMode, "Start painting", "Button", GUILayout.Height(60f));
 
         _brushSize = EditorGUILayout.IntSlider("Brush Size:", _brushSize, 1, 10);
+        _ruleTileMode = GUILayout.Toggle(_ruleTileMode, "Rule tile:", "Toggle", GUILayout.Height(20f));
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
     }
 
@@ -70,25 +82,35 @@ public class TilemapStyx : EditorWindow
     {
         EditorGUILayout.Space();
         GUILayout.FlexibleSpace();
-        _collisionIndex = EditorGUILayout.Popup(_collisionIndex, collisionSelection);
+        _collisionLayer = (COLLISION_LAYERS)EditorGUILayout.EnumPopup("", _collisionLayer);
         GUILayout.FlexibleSpace();
-        _layerIndex = EditorGUILayout.Popup(_layerIndex, layersSelection);
+        _sortingLayer = (SORTING_LAYERS)EditorGUILayout.EnumPopup("", _sortingLayer);
 
         GUIStyle centerLabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
-        EditorGUILayout.LabelField(_palette[_paletteIndex].name, centerLabelStyle, GUILayout.ExpandWidth(true));
-       
         GUILayout.BeginVertical();
-        tileGridScrollPosition = GUILayout.BeginScrollView(tileGridScrollPosition, false, true, GUILayout.MinWidth(350), GUILayout.MaxWidth(1500), GUILayout.ExpandWidth(true), GUILayout.MinHeight(100), GUILayout.MaxHeight(1000), GUILayout.ExpandHeight(true));
+        tileGridScrollPosition = GUILayout.BeginScrollView(tileGridScrollPosition, false, true, GUILayout.MinWidth(350), GUILayout.MaxWidth(1500), GUILayout.ExpandWidth(true), GUILayout.MinHeight(100), GUILayout.MaxHeight(800));
+        EditorGUILayout.LabelField(_currentPalette[_paletteIndex].name, centerLabelStyle, GUILayout.ExpandWidth(true));
         List<GUIContent> paletteIcons = new List<GUIContent>();
-        foreach (MapObject mapObject in _palette)
+        switch (_sortingLayer)
         {
-            if (mapObject.GetComponent<SpriteRenderer>().sortingOrder == 1)
+            case SORTING_LAYERS.Background:
+                _currentPalette = _backgroundPalette;
+                break;
+            case SORTING_LAYERS.Midground:
+                _currentPalette = _midgroundPalette;
+                break;
+            case SORTING_LAYERS.Foreground:
+                _currentPalette = _foregroundPalette;
+                break;
+        }
+        foreach (MapObject mapObject in _currentPalette)
+        {
             {
                 Texture2D texture = AssetPreview.GetAssetPreview(mapObject.gameObject);
                 paletteIcons.Add(new GUIContent(texture));
             }
         }
-        _paletteIndex = GUILayout.SelectionGrid(_paletteIndex, paletteIcons.ToArray(), _paletteColumnSize, GUILayout.MinWidth(200), GUILayout.MaxWidth(300), GUILayout.ExpandWidth(true), GUILayout.MinHeight(1000), GUILayout.MaxHeight(1200), GUILayout.ExpandHeight(true));
+        _paletteIndex = GUILayout.SelectionGrid(_paletteIndex, paletteIcons.ToArray(), _paletteColumnSize, GUILayout.MinWidth(150), GUILayout.MaxWidth(200), GUILayout.ExpandWidth(true), GUILayout.MinHeight(600), GUILayout.MaxHeight(700));
         GUILayout.EndScrollView();
         GUILayout.EndVertical();
     }
@@ -109,10 +131,14 @@ public class TilemapStyx : EditorWindow
 
     private void RefreshPalette()
     {
-        _palette.Clear();
-
+        _tilemapStyxRoot = null;
+        _backgroundPalette.Clear();
+        _midgroundPalette.Clear();
+        _foregroundPalette.Clear();
         Directory.CreateDirectory(_rootPath);
-        Directory.CreateDirectory(_backgroundPath); 
+        Directory.CreateDirectory(_backgroundPath);
+        Directory.CreateDirectory(_midgroundPath);
+        Directory.CreateDirectory(_foregroundPath);
 
         string[] root = Directory.GetFiles(_rootPath, "*.prefab");
         foreach (string prefabFile in root)
@@ -123,13 +149,17 @@ public class TilemapStyx : EditorWindow
         string[] backgroundFiles = Directory.GetFiles(_backgroundPath, "*.prefab");
         foreach (string backgroundFile in backgroundFiles)
         {
-            _palette.Add(AssetDatabase.LoadAssetAtPath(backgroundFile, typeof(MapObject)) as MapObject);
+            _backgroundPalette.Add(AssetDatabase.LoadAssetAtPath(backgroundFile, typeof(MapObject)) as MapObject);
         }
-
         string[] midgroundFiles = Directory.GetFiles(_midgroundPath, "*.prefab");
         foreach (string midgroundFile in midgroundFiles)
         {
-            _palette.Add(AssetDatabase.LoadAssetAtPath(midgroundFile, typeof(MapObject)) as MapObject);
+            _midgroundPalette.Add(AssetDatabase.LoadAssetAtPath(midgroundFile, typeof(MapObject)) as MapObject);
+        }
+        string[] foregroundFiles = Directory.GetFiles(_foregroundPath, "*.prefab");
+        foreach (string foregroundFile in foregroundFiles)
+        {
+            _foregroundPalette.Add(AssetDatabase.LoadAssetAtPath(foregroundFile, typeof(MapObject)) as MapObject);
         }
     }
     #endregion
@@ -182,9 +212,9 @@ public class TilemapStyx : EditorWindow
         {
             _cellColor = Color.white;
         }
-        if (_paletteIndex < _palette.Count && Event.current.type == EventType.MouseDown && Event.current.button == 0)
+        if (_paletteIndex < _currentPalette.Count && Event.current.type == EventType.MouseDown && Event.current.button == 0)
         {
-            MapObject mapObject = _palette[_paletteIndex];
+            MapObject mapObject = _currentPalette[_paletteIndex];
             if (Event.current.control)
             {
                 RemoveMapObject(cellCenter, mapObject.SortingLayerID);
@@ -208,7 +238,7 @@ public class TilemapStyx : EditorWindow
     {
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.D)
         {
-            if (_paletteIndex != _palette.Count - 1)
+            if (_paletteIndex != _backgroundPalette.Count - 1)
             {
                 _paletteIndex++;
             }
@@ -225,7 +255,7 @@ public class TilemapStyx : EditorWindow
             }
             else
             {
-                _paletteIndex = _palette.Count - 1;
+                _paletteIndex = _backgroundPalette.Count - 1;
             }
         }
     }
