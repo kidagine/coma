@@ -11,21 +11,24 @@ public class TilemapStyx : EditorWindow
     private readonly List<MapObject> _backgroundPalette = new List<MapObject>();
     private readonly List<MapObject> _midgroundPalette = new List<MapObject>();
     private readonly List<MapObject> _foregroundPalette = new List<MapObject>();
-    private List<MapObject> _currentPalette;
     private readonly Vector2 _cellSize = new Vector2(1.0f, 1.0f);
     private readonly string _rootPath = "Assets/Editor Default Resources";
     private readonly string _backgroundPath = "Assets/Editor Default Resources/Background";
     private readonly string _midgroundPath = "Assets/Editor Default Resources/Midground";
     private readonly string _foregroundPath = "Assets/Editor Default Resources/Foreground";
     private readonly int _paletteColumnSize = 3;
-    private GameObject _tilemapStyxRoot;
+	private List<MapObject> _currentPalette;
+	private GameObject _tilemapStyxRoot;
     private GameObject _tilemapStyxRootPrefab;
-    private SORTING_LAYERS _sortingLayer;
-    private COLLISION_LAYERS _collisionLayer;
     private Vector2 tileGridScrollPosition;
     private Color _cellColor;
-    private int _paletteIndex;
+	private SORTING_LAYERS _sortingLayer;
+	private COLLISION_LAYERS _collisionLayer;
+	private int _paletteIndex;
     private int _brushSize;
+	private bool _paletteToggle;
+	private bool _ruleTileToggle;
+	private bool _shortcutToggle;
     private bool _paintMode;
     private bool _ruleTileMode;
     private bool _holdBrush;
@@ -38,9 +41,10 @@ public class TilemapStyx : EditorWindow
         GetWindow(typeof(TilemapStyx));
     }
 
-    private void Awake()
+    void Awake()
     {
-        _currentPalette = _backgroundPalette;
+		_paletteToggle = true;
+		_currentPalette = _backgroundPalette;
     }
 
     void Update()
@@ -52,22 +56,39 @@ public class TilemapStyx : EditorWindow
     void OnGUI()
     {
         DisplayModeToggleSection();
-        DisplayPaintSection();
-        DisplayTileGrid();
+		DisplaySelectedToggleMode();
     }
 
     private void DisplayModeToggleSection()
     {
         EditorGUILayout.Space();
         GUILayout.BeginHorizontal("box");
-        GUILayout.Toggle(_paintMode, "Palettes", "Button", GUILayout.Height(40f));
-        GUILayout.Toggle(_paintMode, "Rule Tiles", "Button", GUILayout.Height(40f));
-        GUILayout.Toggle(_paintMode, "Shortcuts", "Button", GUILayout.Height(40f));
+        _paletteToggle = GUILayout.Toggle(_paletteToggle, "Palettes", "Button", GUILayout.Height(40f));
+        _ruleTileToggle = GUILayout.Toggle(_ruleTileToggle, "Rule Tiles", "Button", GUILayout.Height(40f));
+        _shortcutToggle = GUILayout.Toggle(_shortcutToggle, "Shortcuts", "Button", GUILayout.Height(40f));
         GUILayout.EndHorizontal();
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
     }
 
-    private void DisplayPaintSection()
+	private void DisplaySelectedToggleMode()
+	{
+		if (_paletteToggle)
+		{
+			DisplayPaintSection();
+			DisplayTileGrid();
+		}
+		else if (_ruleTileToggle)
+		{
+
+		}
+		else
+		{
+
+		}
+	}
+
+	#region Palette
+	private void DisplayPaintSection()
     {
         EditorGUILayout.Space();
         if (_paintMode)
@@ -90,12 +111,15 @@ public class TilemapStyx : EditorWindow
         _sortingLayer = (SORTING_LAYERS)EditorGUILayout.EnumPopup("", _sortingLayer);
 
         GUIStyle centerLabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
-        EditorGUILayout.LabelField(_currentPalette[_paletteIndex].name, centerLabelStyle, GUILayout.ExpandWidth(true));
-        GUILayout.BeginVertical();
+		if (_paletteIndex >= 0 && _paletteIndex < _currentPalette.Count -1) 
+		{
+			EditorGUILayout.LabelField(_currentPalette[_paletteIndex].name, centerLabelStyle, GUILayout.ExpandWidth(true));
+		}
+		GUILayout.BeginVertical();
         tileGridScrollPosition = GUILayout.BeginScrollView(tileGridScrollPosition, false, true, GUILayout.MinWidth(350), GUILayout.MaxWidth(1500), GUILayout.ExpandWidth(true), GUILayout.MinHeight(100), GUILayout.MaxHeight(800));
         List<GUIContent> paletteIcons = new List<GUIContent>();
         switch (_sortingLayer)
-        {
+		{
             case SORTING_LAYERS.Background:
                 _currentPalette = _backgroundPalette;
                 break;
@@ -115,13 +139,22 @@ public class TilemapStyx : EditorWindow
             }
         }
         _paletteIndex = GUILayout.SelectionGrid(_paletteIndex, paletteIcons.ToArray(), _paletteColumnSize, GUILayout.MinWidth(150), GUILayout.MaxWidth(200), GUILayout.ExpandWidth(true), GUILayout.MinHeight(600), GUILayout.MaxHeight(700));
-        GUILayout.EndScrollView();
+		GUILayout.EndScrollView();
         GUILayout.EndVertical();
     }
-    #endregion
+	#endregion
 
-    #region Focus And Destroy
-    void OnFocus()
+	#region Rule Tile
+
+	#endregion
+	#region Shortcut
+
+	#endregion
+
+	#endregion
+
+	#region Focus And Destroy
+	void OnFocus()
     {
         SceneView.duringSceneGui -= OnSceneGUI;
         SceneView.duringSceneGui += OnSceneGUI;
@@ -250,26 +283,38 @@ public class TilemapStyx : EditorWindow
     {
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.D)
         {
-            if (_paletteIndex != _backgroundPalette.Count - 1)
+			if (_paletteIndex % _paletteColumnSize - 2 == 0)
+			{
+				tileGridScrollPosition.y += 100;
+			}
+
+			if (_paletteIndex != _currentPalette.Count - 1)
             {
-                _paletteIndex++;
+				_paletteIndex++;
             }
             else
             {
-                _paletteIndex = 0;
+				tileGridScrollPosition.y = 0;
+				_paletteIndex = 0;
             }
-        }
+		}
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.A)
         {
-            if (_paletteIndex != 0)
+			if (_paletteIndex % _paletteColumnSize == 0)
+			{
+				tileGridScrollPosition.y -= 100;
+			}
+
+			if (_paletteIndex != 0)
             {
-                _paletteIndex--;
-            }
-            else
+				_paletteIndex--;
+			}
+			else
             {
-                _paletteIndex = _backgroundPalette.Count - 1;
+				tileGridScrollPosition.y = _currentPalette.Count * 10;
+				_paletteIndex = _currentPalette.Count - 1;
             }
-        }
+		}
     }
 
     private void RemoveMapObject(Vector2 cellCenter, int sortingLayerID)
