@@ -8,14 +8,20 @@ public class TilemapStyx : EditorWindow
     private enum SORTING_LAYERS { Background, Midground, Foreground};
     private enum COLLISION_LAYERS { Collision, NoCollision };
 
-    private readonly List<MapObject> _backgroundPalette = new List<MapObject>();
-    private readonly List<MapObject> _midgroundPalette = new List<MapObject>();
-    private readonly List<MapObject> _foregroundPalette = new List<MapObject>();
+    private readonly List<MapObject> _backgroundNoCollisionPalette = new List<MapObject>();
+    private readonly List<MapObject> _midgroundNoCollisionPalette = new List<MapObject>();
+    private readonly List<MapObject> _foregroundNoCollisionPalette = new List<MapObject>();
+    private readonly List<MapObject> _backgroundCollisionPalette = new List<MapObject>();
+    private readonly List<MapObject> _midgroundCollisionPalette = new List<MapObject>();
+    private readonly List<MapObject> _foregroundCollisionPalette = new List<MapObject>();
     private readonly Vector2 _cellSize = new Vector2(1.0f, 1.0f);
     private readonly string _rootPath = "Assets/Editor Default Resources";
-    private readonly string _backgroundPath = "Assets/Editor Default Resources/Background";
-    private readonly string _midgroundPath = "Assets/Editor Default Resources/Midground";
-    private readonly string _foregroundPath = "Assets/Editor Default Resources/Foreground";
+    private readonly string _backgroundNoCollisionPath = "Assets/Editor Default Resources/NoCollision/Background";
+    private readonly string _midgroundNoCollisionPath = "Assets/Editor Default Resources/NoCollision/Midground";
+    private readonly string _foregroundNoCollisionPath = "Assets/Editor Default Resources/NoCollision/Foreground";
+    private readonly string _backgroundCollisionPath = "Assets/Editor Default Resources/Collision/Background";
+    private readonly string _midgroundCollisionPath = "Assets/Editor Default Resources/Collision/Midground";
+    private readonly string _foregroundCollisionPath = "Assets/Editor Default Resources/Collision/Foreground";
     private readonly int _paletteColumnSize = 3;
 	private List<MapObject> _currentPalette;
 	private GameObject _tilemapStyxRoot;
@@ -47,7 +53,7 @@ public class TilemapStyx : EditorWindow
     void Awake()
     {
 		_paletteToggle = true;
-		_currentPalette = _backgroundPalette;
+		_currentPalette = _backgroundNoCollisionPalette;
     }
 
     void Update()
@@ -156,36 +162,65 @@ public class TilemapStyx : EditorWindow
         _sortingLayer = (SORTING_LAYERS)EditorGUILayout.EnumPopup("", _sortingLayer);
 
         GUIStyle centerLabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
-		if (_paletteIndex >= 0 && _paletteIndex < _currentPalette.Count -1) 
+		if (_paletteIndex >= 0 && _paletteIndex <= _currentPalette.Count -1) 
 		{
 			EditorGUILayout.LabelField(_currentPalette[_paletteIndex].name, centerLabelStyle, GUILayout.ExpandWidth(true));
 		}
-		GUILayout.BeginVertical();
-        tileGridScrollPosition = GUILayout.BeginScrollView(tileGridScrollPosition, false, true, GUILayout.MinWidth(350), GUILayout.MaxWidth(1500), GUILayout.ExpandWidth(true), GUILayout.MinHeight(100), GUILayout.MaxHeight(800));
-        List<GUIContent> paletteIcons = new List<GUIContent>();
-        switch (_sortingLayer)
-		{
-            case SORTING_LAYERS.Background:
-                _currentPalette = _backgroundPalette;
-                break;
-            case SORTING_LAYERS.Midground:
-                _currentPalette = _midgroundPalette;
-                break;
-            case SORTING_LAYERS.Foreground:
-                _currentPalette = _foregroundPalette;
-                break;
-        }
-        foreach (MapObject mapObject in _currentPalette)
+
+        if (_currentPalette.Count > 0)
         {
+            GUILayout.BeginVertical();
+            tileGridScrollPosition = GUILayout.BeginScrollView(tileGridScrollPosition, false, true, GUILayout.MinWidth(350), GUILayout.MaxWidth(1500), GUILayout.ExpandWidth(true), GUILayout.MinHeight(100), GUILayout.MaxHeight(800));
+            List<GUIContent> paletteIcons = new List<GUIContent>();
+            if (_collisionLayer == COLLISION_LAYERS.NoCollision)
             {
-                Texture2D texture = AssetPreview.GetAssetPreview(mapObject.gameObject);
-                GUIContent tileGuiContent = new GUIContent() { image = texture, tooltip = mapObject.name };
-                paletteIcons.Add(tileGuiContent);
+                switch (_sortingLayer)
+                {
+                    case SORTING_LAYERS.Background:
+                        _currentPalette = _backgroundNoCollisionPalette;
+                        break;
+                    case SORTING_LAYERS.Midground:
+                        _currentPalette = _midgroundNoCollisionPalette;
+                        break;
+                    case SORTING_LAYERS.Foreground:
+                        _currentPalette = _foregroundNoCollisionPalette;
+                        break;
+                }
             }
+            else
+            {
+                switch (_sortingLayer)
+                {
+                    case SORTING_LAYERS.Background:
+                        _currentPalette = _backgroundCollisionPalette;
+                        break;
+                    case SORTING_LAYERS.Midground:
+                        _currentPalette = _midgroundCollisionPalette;
+                        break;
+                    case SORTING_LAYERS.Foreground:
+                        _currentPalette = _foregroundCollisionPalette;
+                        break;
+                }
+            }
+
+            foreach (MapObject mapObject in _currentPalette)
+            {
+                {
+                    Texture2D texture = AssetPreview.GetAssetPreview(mapObject.gameObject);
+                    GUIContent tileGuiContent = new GUIContent() { image = texture, tooltip = mapObject.name };
+                    paletteIcons.Add(tileGuiContent);
+                }
+            }
+            _paletteIndex = GUILayout.SelectionGrid(_paletteIndex, paletteIcons.ToArray(), _paletteColumnSize);
+            GUILayout.EndScrollView();
+            GUILayout.EndVertical();
         }
-        _paletteIndex = GUILayout.SelectionGrid(_paletteIndex, paletteIcons.ToArray(), _paletteColumnSize, GUILayout.MinWidth(150), GUILayout.MaxWidth(200), GUILayout.ExpandWidth(true), GUILayout.MinHeight(600), GUILayout.MaxHeight(700));
-		GUILayout.EndScrollView();
-        GUILayout.EndVertical();
+        else
+        {
+            GUILayout.BeginVertical("box", GUILayout.MinWidth(350), GUILayout.MaxWidth(1500), GUILayout.ExpandWidth(true), GUILayout.MinHeight(100), GUILayout.MaxHeight(800));
+            EditorGUILayout.LabelField("The current palette is empty", centerLabelStyle, GUILayout.ExpandWidth(true));
+            GUILayout.EndVertical();
+        }
     }
 	#endregion
 
@@ -224,13 +259,19 @@ public class TilemapStyx : EditorWindow
     private void RefreshPalette()
     {
         _tilemapStyxRoot = null;
-        _backgroundPalette.Clear();
-        _midgroundPalette.Clear();
-        _foregroundPalette.Clear();
+        _backgroundNoCollisionPalette.Clear();
+        _midgroundNoCollisionPalette.Clear();
+        _foregroundNoCollisionPalette.Clear();
+        _backgroundCollisionPalette.Clear();
+        _midgroundCollisionPalette.Clear();
+        _foregroundCollisionPalette.Clear();
         Directory.CreateDirectory(_rootPath);
-        Directory.CreateDirectory(_backgroundPath);
-        Directory.CreateDirectory(_midgroundPath);
-        Directory.CreateDirectory(_foregroundPath);
+        Directory.CreateDirectory(_backgroundNoCollisionPath);
+        Directory.CreateDirectory(_midgroundNoCollisionPath);
+        Directory.CreateDirectory(_foregroundNoCollisionPath);
+        Directory.CreateDirectory(_backgroundCollisionPath);
+        Directory.CreateDirectory(_midgroundCollisionPath);
+        Directory.CreateDirectory(_foregroundCollisionPath);
 
         string[] root = Directory.GetFiles(_rootPath, "*.prefab");
         foreach (string prefabFile in root)
@@ -238,20 +279,36 @@ public class TilemapStyx : EditorWindow
             _tilemapStyxRoot = AssetDatabase.LoadAssetAtPath(prefabFile, typeof(GameObject)) as GameObject;
         }
 
-        string[] backgroundFiles = Directory.GetFiles(_backgroundPath, "*.prefab");
-        foreach (string backgroundFile in backgroundFiles)
+        string[] backgroundNoCollisionFiles = Directory.GetFiles(_backgroundNoCollisionPath, "*.prefab");
+        foreach (string backgroundFile in backgroundNoCollisionFiles)
         {
-            _backgroundPalette.Add(AssetDatabase.LoadAssetAtPath(backgroundFile, typeof(MapObject)) as MapObject);
+            _backgroundNoCollisionPalette.Add(AssetDatabase.LoadAssetAtPath(backgroundFile, typeof(MapObject)) as MapObject);
         }
-        string[] midgroundFiles = Directory.GetFiles(_midgroundPath, "*.prefab");
-        foreach (string midgroundFile in midgroundFiles)
+        string[] midgroundNoCollisionFiles = Directory.GetFiles(_midgroundNoCollisionPath, "*.prefab");
+        foreach (string midgroundFile in midgroundNoCollisionFiles)
         {
-            _midgroundPalette.Add(AssetDatabase.LoadAssetAtPath(midgroundFile, typeof(MapObject)) as MapObject);
+            _midgroundNoCollisionPalette.Add(AssetDatabase.LoadAssetAtPath(midgroundFile, typeof(MapObject)) as MapObject);
         }
-        string[] foregroundFiles = Directory.GetFiles(_foregroundPath, "*.prefab");
-        foreach (string foregroundFile in foregroundFiles)
+        string[] foregroundNoCollisionFiles = Directory.GetFiles(_foregroundNoCollisionPath, "*.prefab");
+        foreach (string foregroundFile in foregroundNoCollisionFiles)
         {
-            _foregroundPalette.Add(AssetDatabase.LoadAssetAtPath(foregroundFile, typeof(MapObject)) as MapObject);
+            _foregroundNoCollisionPalette.Add(AssetDatabase.LoadAssetAtPath(foregroundFile, typeof(MapObject)) as MapObject);
+        }
+
+        string[] backgroundCollisionFiles = Directory.GetFiles(_backgroundCollisionPath, "*.prefab");
+        foreach (string backgroundFile in backgroundCollisionFiles)
+        {
+            _backgroundCollisionPalette.Add(AssetDatabase.LoadAssetAtPath(backgroundFile, typeof(MapObject)) as MapObject);
+        }
+        string[] midgroundCollisionFiles = Directory.GetFiles(_midgroundCollisionPath, "*.prefab");
+        foreach (string midgroundFile in midgroundCollisionFiles)
+        {
+            _midgroundCollisionPalette.Add(AssetDatabase.LoadAssetAtPath(midgroundFile, typeof(MapObject)) as MapObject);
+        }
+        string[] foregroundCollisionFiles = Directory.GetFiles(_foregroundCollisionPath, "*.prefab");
+        foreach (string foregroundFile in foregroundCollisionFiles)
+        {
+            _foregroundCollisionPalette.Add(AssetDatabase.LoadAssetAtPath(foregroundFile, typeof(MapObject)) as MapObject);
         }
     }
     #endregion
