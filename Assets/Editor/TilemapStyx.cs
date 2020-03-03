@@ -33,6 +33,9 @@ public class TilemapStyx : EditorWindow
     private bool _ruleTileMode;
     private bool _holdBrush;
     private bool _isHoldingMouse;
+    private bool _isPaletteTogglePressed;
+    private bool _isRuleTileTogglePressed;
+    private bool _isShortcutTogglePressed;
 
 
     [MenuItem("Window/Tilemap Styx")]
@@ -72,20 +75,62 @@ public class TilemapStyx : EditorWindow
 
 	private void DisplaySelectedToggleMode()
 	{
-		if (_paletteToggle)
+        DisallowUntoggling();
+        if (_paletteToggle && !_isPaletteTogglePressed)
+        {
+            _isPaletteTogglePressed = true;
+            _isRuleTileTogglePressed = false;
+            _isShortcutTogglePressed = false;
+            _ruleTileToggle = false;
+            _shortcutToggle = false;
+        }
+        if (_ruleTileToggle && !_isRuleTileTogglePressed)
+        {
+            _isRuleTileTogglePressed = true;
+            _isPaletteTogglePressed = false;
+            _isShortcutTogglePressed = false;
+            _paletteToggle = false;
+            _shortcutToggle = false;
+        }
+        if (_shortcutToggle && !_isShortcutTogglePressed)
 		{
-			DisplayPaintSection();
-			DisplayTileGrid();
-		}
-		else if (_ruleTileToggle)
-		{
+            _isShortcutTogglePressed = true;
+            _isPaletteTogglePressed = false;
+            _isRuleTileTogglePressed = false;
+            _paletteToggle = false;
+            _ruleTileToggle = false;
+        }
 
-		}
-		else
-		{
+        if (_paletteToggle)
+        {
+            DisplayPaintSection();
+            DisplayTileGrid();
+        }
+        if (_ruleTileToggle)
+        {
+            DisplayRuleTile();
+        }
+        if (_shortcutToggle)
+        {
+            DisplayShortcut();
+        }
+    }
 
-		}
-	}
+    private void DisallowUntoggling()
+    {
+        if (_isPaletteTogglePressed)
+        {
+            _paletteToggle = true;
+        }
+        if (_isRuleTileTogglePressed)
+        {
+            _ruleTileToggle = true;
+        }
+        if (_isShortcutTogglePressed)
+        {
+            _shortcutToggle = true;
+        }
+    }
 
 	#region Palette
 	private void DisplayPaintSection()
@@ -145,16 +190,26 @@ public class TilemapStyx : EditorWindow
 	#endregion
 
 	#region Rule Tile
+    private void DisplayRuleTile()
+    {
+        EditorGUILayout.LabelField("In works.", GUILayout.ExpandWidth(true));
+    }
+    #endregion
+    #region Shortcut
+    private void DisplayShortcut()
+    {
+        EditorGUILayout.LabelField("CTRL: Delete", GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("A: Switch one tile back", GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("D: Switch one tile ahead", GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Q: Decrease brush size by one", GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("E: Increase brush size by one", GUILayout.ExpandWidth(true));
+    }
+    #endregion
 
-	#endregion
-	#region Shortcut
+    #endregion
 
-	#endregion
-
-	#endregion
-
-	#region Focus And Destroy
-	void OnFocus()
+    #region Focus And Destroy
+    void OnFocus()
     {
         SceneView.duringSceneGui -= OnSceneGUI;
         SceneView.duringSceneGui += OnSceneGUI;
@@ -311,7 +366,7 @@ public class TilemapStyx : EditorWindow
 			}
 			else
             {
-				tileGridScrollPosition.y = _currentPalette.Count * 10;
+				tileGridScrollPosition.y = _currentPalette.Count * 100;
 				_paletteIndex = _currentPalette.Count - 1;
             }
 		}
