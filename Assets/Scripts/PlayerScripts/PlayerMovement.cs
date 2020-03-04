@@ -4,9 +4,10 @@ public class PlayerMovement : MonoBehaviour
 {
 	[SerializeField] private Rigidbody2D _rigidbody = default;
 	[SerializeField] private Animator _animator = default;
-	private Vector2 _direction;
-	private Vector2 _lastDirection;
+	private readonly float _minimumToAngleValue = 1.0f;
+	private readonly float _maximumToAngleValue = 0.75f;
 	private readonly int _moveSpeed = 3;
+	private Vector2 _movementDirection;
 
 	public Vector2 MovementInput { private get; set; }
 
@@ -23,45 +24,80 @@ public class PlayerMovement : MonoBehaviour
 
 	private void MovementDirection()
 	{
-
 		_animator.SetFloat("Vertical", MovementInput.y);
 		_animator.SetFloat("Horizontal", MovementInput.x);
-		_direction = MovementInput;
-		//if (_direction.y != 1.0f && _direction.y != -1.0f)
-		//{
-		//	_direction.x = Mathf.RoundToInt(MovementInput.x);
-		//	if (_direction.x != 0)
-		//	{
-		//		_animator.SetFloat("Vertical", 0.0f);
-		//		_animator.SetFloat("Horizontal", _lastDirection.x);
-		//		_lastDirection.y = 0.0f;
-		//		_lastDirection.x = _direction.x;
-		//	}
-		//}
-		//if (_direction.x != 1.0f && _direction.x != -1.0f)
-		//{
-		//	_direction.y = Mathf.RoundToInt(MovementInput.y);
-		//	if (_direction.y != 0.0f)
-		//	{
-		//		_animator.SetFloat("Horizontal", 0.0f);
-		//		_animator.SetFloat("Vertical", _lastDirection.y);
-		//		_lastDirection.x = 0.0f;
-		//		_lastDirection.y = _direction.y;
-		//	}
-		//}
-
-		if (_direction == Vector2.zero)
+		if (MovementInput != Vector2.zero)
 		{
-			_animator.speed = 0;
+			if (Mathf.Abs(MovementInput.x) <= _maximumToAngleValue)
+			{
+				if (MovementInput.x > 0.0f)
+				{
+					if (MovementInput.y > 0.0f)
+					{
+						_movementDirection.x = 0.75f;
+						_movementDirection.y = 0.75f;
+					}
+					else
+					{
+						_movementDirection.x = 0.75f;
+						_movementDirection.y = -0.75f;
+					}
+				}
+				else
+				{
+					if (MovementInput.y > 0.0f)
+					{
+						_movementDirection.x = -0.75f;
+						_movementDirection.y = 0.75f;
+					}
+					else
+					{
+						_movementDirection.x = -0.75f;
+						_movementDirection.y = -0.75f;
+					}
+				}
+			}
+			if (Mathf.Abs(MovementInput.y) != 1.0f)
+			{
+				if (Mathf.Abs(MovementInput.x) <= _minimumToAngleValue && Mathf.Abs(MovementInput.x) >= _maximumToAngleValue)
+				{
+					if (MovementInput.x > 0.0f)
+					{
+						_movementDirection.x = 1.0f;
+						_movementDirection.y = 0.0f;
+					}
+					else
+					{
+						_movementDirection.x = -1.0f;
+						_movementDirection.y = 0.0f;
+					}
+				}
+			}	
+			if (Mathf.Abs(MovementInput.x) != 1.0f)
+			{
+				if (Mathf.Abs(MovementInput.y) <= _minimumToAngleValue && Mathf.Abs(MovementInput.y) >= _maximumToAngleValue)
+				{
+					if (MovementInput.y > 0.0f)
+					{
+						_movementDirection.y = 1.0f;
+						_movementDirection.x = 0.0f;
+					}
+					else
+					{
+						_movementDirection.y = -1.0f;
+						_movementDirection.x = 0.0f;
+					}
+				}
+			}
 		}
 		else
 		{
-			_animator.speed = 1;
+			_movementDirection = Vector2.zero;
 		}
 	}
 
 	private void Movement()
 	{
-		_rigidbody.MovePosition(_rigidbody.position + _direction * _moveSpeed * Time.fixedDeltaTime);
+		_rigidbody.MovePosition(_rigidbody.position + _movementDirection * _moveSpeed * Time.fixedDeltaTime);
 	}
 }
