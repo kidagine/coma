@@ -1,18 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Animator _animator;
+
+
+    public void StartGame()
     {
-        
+        AudioManager.Instance.Play("Click");
+        _animator.SetTrigger("FadeIn");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ExitGame()
     {
-        
+        AudioManager.Instance.Play("Click");
+        Application.Quit();
+    }
+
+    public void Hover()
+    {
+        AudioManager.Instance.Play("Hover");
+    }
+
+    public void NextSceneAnimationEvent()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
