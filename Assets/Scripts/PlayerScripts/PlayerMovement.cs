@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] private Animator _animator = default;
 	private readonly float _minimumToAngleValue = 1.0f;
 	private readonly float _maximumToAngleValue = 0.75f;
-	private readonly int _moveSpeed = 3;
+	private readonly float _moveSpeed = 2.5f;
 	private Vector2 _movementDirection;
 
 	public Vector2 MovementInput { private get; set; }
