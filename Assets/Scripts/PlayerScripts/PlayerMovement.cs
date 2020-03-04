@@ -13,28 +13,42 @@ public class PlayerMovement : MonoBehaviour
 
 	void Update()
     {
-		if (_direction.y != 1.0f && _direction.y != -1.0f)
-		{
-			_direction.x = Mathf.RoundToInt(MovementInput.x);
-			if (_direction.x != 0)
-			{
-				_animator.SetFloat("Vertical", 0.0f);
-				_animator.SetFloat("Horizontal", _lastDirection.x);
-				_lastDirection.y = 0.0f;
-				_lastDirection.x = _direction.x;
-			}
-		}
-		if (_direction.x != 1.0f && _direction.x != -1.0f)
-		{
-			_direction.y = Mathf.RoundToInt(MovementInput.y);
-			if (_direction.y != 0.0f)
-			{
-				_animator.SetFloat("Horizontal", 0.0f);
-				_animator.SetFloat("Vertical", _lastDirection.y);
-				_lastDirection.x = 0.0f;
-				_lastDirection.y = _direction.y;
-			}
-		}
+		MovementDirection();
+	}
+
+	void FixedUpdate()
+	{
+		Movement();
+	}
+
+	private void MovementDirection()
+	{
+
+		_animator.SetFloat("Vertical", MovementInput.y);
+		_animator.SetFloat("Horizontal", MovementInput.x);
+		_direction = MovementInput;
+		//if (_direction.y != 1.0f && _direction.y != -1.0f)
+		//{
+		//	_direction.x = Mathf.RoundToInt(MovementInput.x);
+		//	if (_direction.x != 0)
+		//	{
+		//		_animator.SetFloat("Vertical", 0.0f);
+		//		_animator.SetFloat("Horizontal", _lastDirection.x);
+		//		_lastDirection.y = 0.0f;
+		//		_lastDirection.x = _direction.x;
+		//	}
+		//}
+		//if (_direction.x != 1.0f && _direction.x != -1.0f)
+		//{
+		//	_direction.y = Mathf.RoundToInt(MovementInput.y);
+		//	if (_direction.y != 0.0f)
+		//	{
+		//		_animator.SetFloat("Horizontal", 0.0f);
+		//		_animator.SetFloat("Vertical", _lastDirection.y);
+		//		_lastDirection.x = 0.0f;
+		//		_lastDirection.y = _direction.y;
+		//	}
+		//}
 
 		if (_direction == Vector2.zero)
 		{
@@ -44,11 +58,6 @@ public class PlayerMovement : MonoBehaviour
 		{
 			_animator.speed = 1;
 		}
-	}
-
-	void FixedUpdate()
-	{
-		Movement();
 	}
 
 	private void Movement()
