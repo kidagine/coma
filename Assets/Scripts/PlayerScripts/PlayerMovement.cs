@@ -8,13 +8,15 @@ public class PlayerMovement : MonoBehaviour
 	private readonly float _maximumToAngleValue = 0.75f;
 	private readonly float _moveSpeed = 2.5f;
 	private Vector2 _movementDirection;
-
+	private float footstepCooldown;
+	private float currentFootstepSpeed = 0.3f;
 	public Vector2 MovementInput { private get; set; }
 
 
 	void Update()
     {
 		MovementDirection();
+		Footsteps();
 	}
 
 	void FixedUpdate()
@@ -24,8 +26,8 @@ public class PlayerMovement : MonoBehaviour
 
 	private void MovementDirection()
 	{
-		_animator.SetFloat("Vertical", MovementInput.y);
-		_animator.SetFloat("Horizontal", MovementInput.x);
+		_animator.SetFloat("Vertical", _movementDirection.y);
+		_animator.SetFloat("Horizontal", _movementDirection.x);
 		if (MovementInput != Vector2.zero)
 		{
 			if (Mathf.Abs(MovementInput.x) <= _maximumToAngleValue)
@@ -99,5 +101,18 @@ public class PlayerMovement : MonoBehaviour
 	private void Movement()
 	{
 		_rigidbody.MovePosition(_rigidbody.position + _movementDirection * _moveSpeed * Time.fixedDeltaTime);
+	}
+
+	private void Footsteps()
+	{
+		if (MovementInput.magnitude > 0.0f)
+		{
+			footstepCooldown -= Time.deltaTime;
+			if (footstepCooldown <= 0)
+			{
+				AudioManager.Instance.PlayRandomFromSoundGroup("PlayerFootsteps");
+				footstepCooldown = currentFootstepSpeed;
+			}
+		}
 	}
 }
