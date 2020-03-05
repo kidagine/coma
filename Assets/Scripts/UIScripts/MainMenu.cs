@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
+	[SerializeField] private SceneNames _sceneName;
 
 
-    public void StartGame()
+	public void StartGame()
     {
         AudioManager.Instance.Play("Click");
         _animator.SetTrigger("FadeIn");
@@ -20,11 +20,11 @@ public class MainMenu : MonoBehaviour
 
     public void Hover()
     {
-        AudioManager.Instance.Play("Hover");
+		AudioManager.Instance.Play("Hover");
     }
 
     public void NextSceneAnimationEvent()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+		GameManager.Instance.LoadScene(_sceneName);
     }
 }
