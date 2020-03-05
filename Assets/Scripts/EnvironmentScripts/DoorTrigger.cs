@@ -3,6 +3,7 @@
 public class DoorTrigger : MonoBehaviour
 {
 	[SerializeField] private SceneNames _sceneName;
+	[SerializeField] private Transform _playerOnLoadScenePoint;
 
 
 	private void OnTriggerEnter2D(Collider2D collision)
@@ -10,7 +11,7 @@ public class DoorTrigger : MonoBehaviour
 		PlayerMovement player = collision.GetComponent<PlayerMovement>();
 		if (player != null)
 		{
-			GameManager.Instance.LoadScene(_sceneName);
+			GameManager.Instance.LoadScene(_sceneName, _playerOnLoadScenePoint.position);
 		}
 	}
 }

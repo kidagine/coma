@@ -6,5 +6,4 @@ public class PlayerAnimationEvents : MonoBehaviour
     {
         AudioManager.Instance.Play(animationEvent.stringParameter);
     }
-
 }

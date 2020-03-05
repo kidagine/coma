@@ -5,7 +5,8 @@ public enum SceneNames { MainMenu = 0, Room01 = 1, Room02 = 2 };
 
 public class GameManager : MonoBehaviour
 {
-	private Vector2 _playerPositionOnLoad;
+	private Vector2 _currentPlayerPositionOnLoad;
+	private Vector2 _lastPlayerPositionOnLoad;
 
 	public static GameManager Instance { get; private set; }
 
@@ -35,7 +36,7 @@ public class GameManager : MonoBehaviour
 
 	public void LoadScene(SceneNames sceneName, Vector2 playerPositionOnLoad)
 	{
-		_playerPositionOnLoad = playerPositionOnLoad;
+		_currentPlayerPositionOnLoad = playerPositionOnLoad;
 		SceneManager.LoadScene((int)sceneName);
 	}
 
@@ -52,9 +53,14 @@ public class GameManager : MonoBehaviour
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		Transform playerTransform = FindObjectOfType<PlayerMovement>().transform;
+
+		if (_lastPlayerPositionOnLoad != Vector2.zero)
+		{
+			playerTransform.position = _lastPlayerPositionOnLoad;
+		}
 		if (playerTransform != null)
 		{
-			playerTransform.position = _playerPositionOnLoad;
+			_lastPlayerPositionOnLoad = _currentPlayerPositionOnLoad;
 		}
 	}
 }
