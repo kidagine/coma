@@ -170,7 +170,7 @@ MonoBehaviour:
     volume: 0.2
     pitch: 1.2
     name: NailBite
-    loop: 0
+    loop: 1
     playOnAwake: 1
   _soundGroups: []
 --- !u!4 &130865720
