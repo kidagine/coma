@@ -955,7 +955,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1378120081}
-  _sceneName: 1
+  _sceneName: 2
 --- !u!95 &1378120081
 Animator:
   serializedVersion: 3

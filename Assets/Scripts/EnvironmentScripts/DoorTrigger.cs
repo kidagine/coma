@@ -2,7 +2,7 @@
 
 public class DoorTrigger : MonoBehaviour
 {
-	[SerializeField] private SceneNames _sceneName;
+	[SerializeField] private SceneName _sceneName;
 	[SerializeField] private Transform _playerOnLoadScenePoint;
 
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum SceneNames { MainMenu = 0, Room01 = 1, Room02 = 2 };
+public enum SceneName { Logo = 0, MainMenu = 1, Room01 = 2, Room02 = 3 };
 
 public class GameManager : MonoBehaviour
 {
@@ -29,12 +29,12 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	public void LoadScene(SceneNames sceneName)
+	public void LoadScene(SceneName sceneName)
 	{
 		SceneManager.LoadScene((int) sceneName);
 	}
 
-	public void LoadScene(SceneNames sceneName, Vector2 playerPositionOnLoad)
+	public void LoadScene(SceneName sceneName, Vector2 playerPositionOnLoad)
 	{
 		_currentPlayerPositionOnLoad = playerPositionOnLoad;
 		SceneManager.LoadScene((int)sceneName);
@@ -52,14 +52,15 @@ public class GameManager : MonoBehaviour
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		Transform playerTransform = FindObjectOfType<PlayerMovement>().transform;
+		PlayerMovement player = FindObjectOfType<PlayerMovement>();
+		if (player != null)
+		{
+			Transform playerTransform = player.transform;
 
-		if (_lastPlayerPositionOnLoad != Vector2.zero)
-		{
-			playerTransform.position = _lastPlayerPositionOnLoad;
-		}
-		if (playerTransform != null)
-		{
+			if (_lastPlayerPositionOnLoad != Vector2.zero)
+			{
+				playerTransform.position = _lastPlayerPositionOnLoad;
+			}
 			_lastPlayerPositionOnLoad = _currentPlayerPositionOnLoad;
 		}
 	}

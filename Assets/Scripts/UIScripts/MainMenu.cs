@@ -3,7 +3,7 @@
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
-	[SerializeField] private SceneNames _sceneName;
+	[SerializeField] private SceneName _sceneName;
 
 
 	public void StartGame()
