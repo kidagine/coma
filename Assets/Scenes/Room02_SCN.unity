@@ -4031,7 +4031,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d5bfc97df0815e4490115eb20746601, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerInput: {fileID: 7789245191762991697}
 --- !u!4 &1178919179
 Transform:
   m_ObjectHideFlags: 0
@@ -5182,6 +5181,20 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     name: Blink
+    loop: 0
+    playOnAwake: 0
+  - source: {fileID: 0}
+    clip: {fileID: 8300000, guid: 70a7ee175769e464cac26415c0c44d01, type: 3}
+    volume: 1
+    pitch: 1
+    name: ShowPickup
+    loop: 0
+    playOnAwake: 0
+  - source: {fileID: 0}
+    clip: {fileID: 8300000, guid: f136befeda0e02e4b9ec07db3f50219d, type: 3}
+    volume: 1
+    pitch: 1
+    name: HidePickup
     loop: 0
     playOnAwake: 0
   _soundGroups:
@@ -6636,7 +6649,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2051475785}
   - component: {fileID: 2051475784}
-  - component: {fileID: 2051475783}
   - component: {fileID: 2051475782}
   m_Layer: 0
   m_Name: Sword_weapon
@@ -6671,19 +6683,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3, y: 3}
   m_EdgeRadius: 0
---- !u!114 &2051475783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051475781}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f560fe18b7f4fa4283e6c2fd94d5620, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _itemExplosionPrefab: {fileID: 0}
 --- !u!212 &2051475784
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -6,10 +6,11 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] private Animator _animator = default;
 	private readonly float _minimumToAngleValue = 1.0f;
 	private readonly float _maximumToAngleValue = 0.75f;
+	private readonly float _currentFootstepSpeed = 0.3f;
 	private readonly float _moveSpeed = 2.5f;
 	private Vector2 _movementDirection;
-	private float footstepCooldown;
-	private float currentFootstepSpeed = 0.3f;
+	private float _footstepCooldown;
+
 	public Vector2 MovementInput { private get; set; }
 
 
@@ -26,8 +27,6 @@ public class PlayerMovement : MonoBehaviour
 
 	private void MovementDirection()
 	{
-		_animator.SetFloat("Vertical", _movementDirection.y);
-		_animator.SetFloat("Horizontal", _movementDirection.x);
 		if (MovementInput != Vector2.zero)
 		{
 			if (Mathf.Abs(MovementInput.x) <= _maximumToAngleValue)
@@ -63,37 +62,28 @@ public class PlayerMovement : MonoBehaviour
 			{
 				if (Mathf.Abs(MovementInput.x) <= _minimumToAngleValue && Mathf.Abs(MovementInput.x) >= _maximumToAngleValue)
 				{
-					if (MovementInput.x > 0.0f)
-					{
-						_movementDirection.x = 1.0f;
-						_movementDirection.y = 0.0f;
-					}
-					else
-					{
-						_movementDirection.x = -1.0f;
-						_movementDirection.y = 0.0f;
-					}
+					_movementDirection.y = 0.0f;
+					_movementDirection.x = Mathf.RoundToInt(MovementInput.x);
 				}
 			}	
 			if (Mathf.Abs(MovementInput.x) != 1.0f)
 			{
 				if (Mathf.Abs(MovementInput.y) <= _minimumToAngleValue && Mathf.Abs(MovementInput.y) >= _maximumToAngleValue)
 				{
-					if (MovementInput.y > 0.0f)
-					{
-						_movementDirection.y = 1.0f;
-						_movementDirection.x = 0.0f;
-					}
-					else
-					{
-						_movementDirection.y = -1.0f;
-						_movementDirection.x = 0.0f;
-					}
+					_movementDirection.y = Mathf.RoundToInt(MovementInput.y);
+					_movementDirection.x = 0.0f;
 				}
 			}
+
+			_animator.SetFloat("Vertical", _movementDirection.y);
+			_animator.SetFloat("Horizontal", _movementDirection.x);
+			_animator.speed = 1.0f;
 		}
 		else
 		{
+			_animator.Play("Movement_BND", 0, 0.0f);
+			_animator.playbackTime = 0.0f;
+			_animator.speed = 0.0f;
 			_movementDirection = Vector2.zero;
 		}
 	}
@@ -107,11 +97,11 @@ public class PlayerMovement : MonoBehaviour
 	{
 		if (MovementInput.magnitude > 0.0f)
 		{
-			footstepCooldown -= Time.deltaTime;
-			if (footstepCooldown <= 0)
+			_footstepCooldown -= Time.deltaTime;
+			if (_footstepCooldown <= 0)
 			{
 				AudioManager.Instance.PlayRandomFromSoundGroup("PlayerFootsteps");
-				footstepCooldown = currentFootstepSpeed;
+				_footstepCooldown = _currentFootstepSpeed;
 			}
 		}
 	}

@@ -6,6 +6,14 @@ public class Pickable : MonoBehaviour
     private Player _player;
 
 
+    void Awake()
+    {
+        if (GlobalSettings.hasPickedBrokenDagger)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Update()
     {
         if (_player != null)
@@ -13,9 +21,11 @@ public class Pickable : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.X))
             {
                 UIManager.Instance.HideUIPrompt();
-                Instantiate(_itemExplosionPrefab, transform.position, Quaternion.identity);
                 UIManager.Instance.ShowUIItem();
+                AudioManager.Instance.Play("ShowPickup");
+                Instantiate(_itemExplosionPrefab, transform.position, Quaternion.identity);
                 _player.PickUp();
+                GlobalSettings.hasPickedBrokenDagger = true;
                 Destroy(gameObject);
             }
         }

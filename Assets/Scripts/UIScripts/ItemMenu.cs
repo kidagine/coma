@@ -12,16 +12,17 @@ public class ItemMenu : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.X))
             {
-                _isGameStateFrozen = false;
+                AudioManager.Instance.Play("HidePickup");
                 _animator.SetTrigger("PopOut");
+                _isGameStateFrozen = false;
             }
         }
     }
 
     private void OnEnable()
     {
-        _isGameStateFrozen = true;
         GameManager.Instance.FreezeGameState();
+        _isGameStateFrozen = true;
     }
 
     public void HideUIItemAnimationEvent()

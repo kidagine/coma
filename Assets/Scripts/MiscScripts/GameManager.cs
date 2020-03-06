@@ -5,7 +5,7 @@ public enum SceneName { Logo = 0, MainMenu = 1, Room01 = 2, Room02 = 3 };
 
 public class GameManager : MonoBehaviour
 {
-	[SerializeField] private PlayerInput _playerInput;
+	private PlayerInput _playerInput;
 	private Vector2 _currentPlayerPositionOnLoad;
 	private Vector2 _lastPlayerPositionOnLoad;
 
@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
 	void Awake()
 	{
+		Cursor.lockState = CursorLockMode.Locked;
 		DontDestroyOnLoad(gameObject);
 		CheckInstance();
 	}
@@ -65,7 +66,9 @@ public class GameManager : MonoBehaviour
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		PlayerMovement player = FindObjectOfType<PlayerMovement>();
+		Player player = FindObjectOfType<Player>();
+		_playerInput = FindObjectOfType<PlayerInput>();
+
 		if (player != null)
 		{
 			Transform playerTransform = player.transform;
