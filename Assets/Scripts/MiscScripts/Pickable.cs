@@ -14,6 +14,7 @@ public class Pickable : MonoBehaviour
             {
                 UIManager.Instance.HideUIPrompt();
                 Instantiate(_itemExplosionPrefab, transform.position, Quaternion.identity);
+                UIManager.Instance.ShowUIItem();
                 _player.PickUp();
                 Destroy(gameObject);
             }

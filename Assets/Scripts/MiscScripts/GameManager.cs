@@ -5,6 +5,7 @@ public enum SceneName { Logo = 0, MainMenu = 1, Room01 = 2, Room02 = 3 };
 
 public class GameManager : MonoBehaviour
 {
+	[SerializeField] private PlayerInput _playerInput;
 	private Vector2 _currentPlayerPositionOnLoad;
 	private Vector2 _lastPlayerPositionOnLoad;
 
@@ -27,6 +28,18 @@ public class GameManager : MonoBehaviour
 		{
 			Instance = this;
 		}
+	}
+
+	public void FreezeGameState()
+	{
+		_playerInput.enabled = false;
+		Time.timeScale = 0.0f;
+	}
+
+	public void UnFreezeGameState()
+	{
+		_playerInput.enabled = true;
+		Time.timeScale = 1.0f;
 	}
 
 	public void LoadScene(SceneName sceneName)
