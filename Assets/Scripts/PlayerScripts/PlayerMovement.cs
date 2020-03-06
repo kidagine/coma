@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] private Rigidbody2D _rigidbody = default;
 	[SerializeField] private Animator _animator = default;
 	private readonly float _minimumToAngleValue = 1.0f;
-	private readonly float _maximumToAngleValue = 0.75f;
+	private readonly float _maximumToAngleValue = 0.9f;
 	private readonly float _currentFootstepSpeed = 0.3f;
 	private readonly float _moveSpeed = 2.5f;
 	private Vector2 _movementDirection;
