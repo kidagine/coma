@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour
 	public void StartGame()
     {
         AudioManager.Instance.Play("Click");
+        AudioManager.Instance.FadeOut("EarlyBus");
         _animator.SetTrigger("FadeIn");
     }
 

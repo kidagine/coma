@@ -3,7 +3,7 @@
 public class UIManager : MonoBehaviour
 {
 	[SerializeField] private GameObject _prompt;
-	[SerializeField] private SceneName _sceneName;
+
 
 	public static UIManager Instance { get; private set; }
 

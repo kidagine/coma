@@ -160,16 +160,16 @@ MonoBehaviour:
     playOnAwake: 0
   - source: {fileID: 0}
     clip: {fileID: 8300000, guid: 29adf137c0bcbb64a8f0fac83fd5e34c, type: 3}
-    volume: 1
+    volume: 0.5
     pitch: 1
     name: Hover
     loop: 0
     playOnAwake: 0
   - source: {fileID: 0}
-    clip: {fileID: 8300000, guid: 8390ccdb9acc173438e58e51f39b2c61, type: 3}
+    clip: {fileID: 8300000, guid: 15cb86c09b7cfec48bdad9b9612d330f, type: 3}
     volume: 0.2
-    pitch: 1.2
-    name: NailBite
+    pitch: 1
+    name: EarlyBus
     loop: 1
     playOnAwake: 1
   _soundGroups: []

@@ -126,7 +126,7 @@ public class AudioManager : MonoBehaviour
 		bool isVolumeMaxed = false;
 		while (!isVolumeMaxed)
 		{
-			sound.source.volume += 0.1f;
+			sound.source.volume += 0.02f;
 			if (sound.source.volume >= 1.0f)
 			{
 				isVolumeMaxed = true;
@@ -149,7 +149,7 @@ public class AudioManager : MonoBehaviour
 		bool isVolumeLowered = false;
 		while (!isVolumeLowered)
 		{
-			sound.source.volume -= 0.05f;
+			sound.source.volume -= 0.02f;
 			if (sound.source.volume <= 0.0f)
 			{
 				isVolumeLowered = true;

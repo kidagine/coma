@@ -2,36 +2,37 @@
 
 public class Pickable : MonoBehaviour
 {
-    private bool _isPlayerClose;
+    [SerializeField] private GameObject _itemExplosionPrefab;
+    private Player _player;
 
 
     void Update()
     {
-        if (_isPlayerClose)
+        if (_player != null)
         {
             if (Input.GetKeyDown(KeyCode.X))
             {
                 UIManager.Instance.HideUIPrompt();
+                Instantiate(_itemExplosionPrefab, transform.position, Quaternion.identity);
+                _player.PickUp();
                 Destroy(gameObject);
             }
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerMovement player = collision.GetComponent<PlayerMovement>();
-        if (player != null)
+        _player = collision.GetComponent<Player>();
+        if (_player != null)
         {
-            _isPlayerClose = true;
             UIManager.Instance.ShowUIPrompt();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        PlayerMovement player = collision.GetComponent<PlayerMovement>();
-        if (player != null)
+        _player = collision.GetComponent<Player>();
+        if (_player != null)
         {
-            _isPlayerClose = false;
             UIManager.Instance.HideUIPrompt();
         }
     }

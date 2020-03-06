@@ -8,7 +8,7 @@ public class DoorTrigger : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		PlayerMovement player = collision.GetComponent<PlayerMovement>();
+		Player player = collision.GetComponent<Player>();
 		if (player != null)
 		{
 			GameManager.Instance.LoadScene(_sceneName, _playerOnLoadScenePoint.position);
