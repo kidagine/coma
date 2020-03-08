@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
 	private float _footstepCooldown;
 
 	public Vector2 MovementInput { private get; set; }
+	public Vector2 CurrentDirection { get; private set; }
 
 
 	void Update()
@@ -78,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
 			_animator.SetFloat("Vertical", _movementDirection.y);
 			_animator.SetFloat("Horizontal", _movementDirection.x);
 			_animator.speed = 1.0f;
+			CurrentDirection = _movementDirection;
 		}
 		else
 		{
