@@ -4,6 +4,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private PlayerMovement _playerMovement;
+    [SerializeField] private PlayerWeapon _playerWeapon;
     [SerializeField] private GameObject _weaponObject;
     [SerializeField] private Animator _animator = default;
 
@@ -25,24 +26,21 @@ public class Player : MonoBehaviour
     public void Attack()
     {
         //Replace with idea of player weapon
-        _animator.SetTrigger("Attack");
-        Vector2 attackOrigin = new Vector2(transform.position.x + _playerMovement.CurrentDirection.x, transform.position.y + _playerMovement.CurrentDirection.y);
-        RaycastHit2D hit = Physics2D.Raycast(attackOrigin, _playerMovement.CurrentDirection, 1.0f);
-        if (hit.collider != null)
-        {
-            if (hit.collider.TryGetComponent(out Obstacle attackable))
-            {
-                attackable.Destroy();
-            }
-        }
-        Debug.DrawRay(attackOrigin, _playerMovement.CurrentDirection, Color.red);
-        StartCoroutine(MovementCooldown(0.25f));
+
+
+        StartCoroutine(MovementCooldown(0.35f));
+
     }
 
     IEnumerator MovementCooldown(float cooldownTime)
     {
         _playerMovement.enabled = false;
+        _animator.speed = 1;
+        _animator.SetBool("IsAttacking", true);
+        _playerWeapon.AttackState(true);
         yield return new WaitForSeconds(cooldownTime);
+        _animator.SetBool("IsAttacking", false);
+        _playerWeapon.AttackState(false);
         _playerMovement.enabled = true;
     }
 }

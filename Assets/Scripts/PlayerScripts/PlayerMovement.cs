@@ -76,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
 				}
 			}
 
+			_animator.SetBool("IsMoving", true);
 			_animator.SetFloat("Vertical", _movementDirection.y);
 			_animator.SetFloat("Horizontal", _movementDirection.x);
 			_animator.speed = 1.0f;
@@ -83,9 +84,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 		else
 		{
-			_animator.Play("Movement_BND", 0, 0.0f);
-			_animator.playbackTime = 0.0f;
-			_animator.speed = 0.0f;
+			_animator.SetBool("IsMoving", false);
 			_movementDirection = Vector2.zero;
 		}
 	}
