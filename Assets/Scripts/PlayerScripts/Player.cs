@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerWeapon _playerWeapon;
     [SerializeField] private GameObject _weaponObject;
     [SerializeField] private Animator _animator = default;
+	private bool _isAttacking;
 
 
     void Awake()
@@ -25,22 +26,22 @@ public class Player : MonoBehaviour
 
     public void Attack()
     {
-        //Replace with idea of player weapon
+		if (!_isAttacking)
+		{
+			_isAttacking = true;
+			StartCoroutine(AttackCooldown(0.35f));
+		}
+	}
 
-
-        StartCoroutine(MovementCooldown(0.35f));
-
-    }
-
-    IEnumerator MovementCooldown(float cooldownTime)
+    IEnumerator AttackCooldown(float cooldownTime)
     {
-        _playerMovement.enabled = false;
-        _animator.speed = 1;
-        _animator.SetBool("IsAttacking", true);
+		_animator.SetBool("IsAttacking", true);
+		_playerMovement.enabled = false;
         _playerWeapon.AttackState(true);
         yield return new WaitForSeconds(cooldownTime);
         _animator.SetBool("IsAttacking", false);
         _playerWeapon.AttackState(false);
         _playerMovement.enabled = true;
+		_isAttacking = false;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum SceneName { Logo = 0, MainMenu = 1, Room01 = 2, Room02 = 3 };
+public enum SceneName { Logo = 0, MainMenu = 1, LazarusDungeon	 = 2 };
 
 public class GameManager : MonoBehaviour
 {
