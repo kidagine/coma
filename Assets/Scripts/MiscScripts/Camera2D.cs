@@ -13,7 +13,29 @@ public class Camera2D : MonoBehaviour
 
     void Update()
     {
-        transform.position +=  Vector3.right * Time.deltaTime * 3f;
+        if (_isFollowingPlayer)
+        {
+            transform.position += Vector3.right * Time.deltaTime * 3f;
+            switch (_cameraBorder)
+            {
+                case CameraBorder.TopBorder:
+                    _smoothedPositionY += Time.deltaTime * _speed;
+                    transform.position = new Vector3(transform.position.x, _smoothedPositionY, transform.position.z);
+                    break;
+                case CameraBorder.BottomBorder:
+                    _smoothedPositionY -= Time.deltaTime * _speed;
+                    transform.position = new Vector3(transform.position.x, _smoothedPositionY, transform.position.z);
+                    break;
+                case CameraBorder.RightBorder:
+                    _smoothedPositionX -= Time.deltaTime * _speed;
+                    transform.position = new Vector3(_smoothedPositionX, transform.position.y, transform.position.z);
+                    break;
+                case CameraBorder.LeftBorder:
+                    _smoothedPositionX += Time.deltaTime * _speed;
+                    transform.position = new Vector3(_smoothedPositionX, transform.position.y, transform.position.z);
+                    break;
+            }
+        }
     }
 
     public void SetFollowPlayer(bool isFollowingPlayer, CameraBorder cameraBorder)

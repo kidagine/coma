@@ -2,6 +2,7 @@
 
 public class Pickable : MonoBehaviour
 {
+    [SerializeField] private GameObject _item;
     [SerializeField] private GameObject _itemExplosionPrefab;
     private Player _player;
 
@@ -16,17 +17,17 @@ public class Pickable : MonoBehaviour
 
     void Update()
     {
-        if (_player != null)
+        if (_player != null && _item != null)
         {
             if (Input.GetKeyDown(KeyCode.X))
             {
                 UIManager.Instance.HideUIPrompt();
                 UIManager.Instance.ShowUIItem();
                 AudioManager.Instance.Play("ShowPickup");
-                Instantiate(_itemExplosionPrefab, transform.position, Quaternion.identity);
+                Instantiate(_itemExplosionPrefab, _item.transform.position, Quaternion.identity);
                 _player.PickUp();
                 GlobalSettings.hasPickedBrokenDagger = true;
-                Destroy(gameObject);
+                Destroy(_item);
             }
         }
     }
