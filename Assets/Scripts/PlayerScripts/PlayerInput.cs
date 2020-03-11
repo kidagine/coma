@@ -13,6 +13,7 @@ public class PlayerInput : MonoBehaviour
 		_playerInputActions = new PlayerInputActions();
 		_playerInputActions.PlayerControls.Movement.performed += SetMove;
 		_playerInputActions.PlayerControls.Attack.performed += Attack;
+		_playerInputActions.PlayerControls.Interact.performed += PickUp;
 	}
 
 	private void SetMove(InputAction.CallbackContext context)
@@ -25,6 +26,14 @@ public class PlayerInput : MonoBehaviour
 		if (context.performed)
 		{
 			_player.Attack();
+		}
+	}
+
+	private void PickUp(InputAction.CallbackContext context)
+	{
+		if (context.performed)
+		{
+			_player.PickUp();
 		}
 	}
 

@@ -2,8 +2,8 @@
 
 public class UIManager : MonoBehaviour
 {
-	[SerializeField] private GameObject _prompt;
-	[SerializeField] private GameObject _item;
+	[SerializeField] private GameObject _promptCanvas;
+	[SerializeField] private GameObject _itemCanvas;
 	
 	public static UIManager Instance { get; private set; }
 
@@ -25,23 +25,26 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public void ShowUIPrompt()
+	public void ShowUIPrompt(Transform target)
 	{
-		_prompt.SetActive(true);
+		_promptCanvas.SetActive(true);
+		Vector3 promptPosition = Camera.main.WorldToScreenPoint(new Vector2(target.transform.position.x, target.transform.position.y + 1.5f));
+		Transform prompt = _promptCanvas.transform.GetChild(0);
+		prompt.transform.position = promptPosition;
 	}
 
 	public void HideUIPrompt()
 	{
-		_prompt.SetActive(false);
+		_promptCanvas.SetActive(false);
 	}
 
 	public void ShowUIItem()
 	{
-		_item.SetActive(true);
+		_itemCanvas.SetActive(true);
 	}
 
 	public void HideUIItem()
 	{
-		_item.SetActive(false);
+		_itemCanvas.SetActive(false);
 	}
 }
