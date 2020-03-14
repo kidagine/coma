@@ -3,18 +3,17 @@
 public class ItemMenu : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
-    private bool _isGameStateFrozen;
+    private bool _canClose;
 
 
     void Update()
     {
-        if (_isGameStateFrozen)
+        if (GameManager.Instance.IsGameStateFrozen)
         {
-            if (Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKeyDown(KeyCode.X) && _canClose)
             {
                 AudioManager.Instance.Play("HidePickup");
                 _animator.SetTrigger("PopOut");
-                _isGameStateFrozen = false;
             }
         }
     }
@@ -22,7 +21,11 @@ public class ItemMenu : MonoBehaviour
     private void OnEnable()
     {
         GameManager.Instance.FreezeGameState();
-        _isGameStateFrozen = true;
+    }
+
+    public void CanCloseUIItemAnimationEvent()
+    {
+        _canClose = true;
     }
 
     public void HideUIItemAnimationEvent()

@@ -7043,7 +7043,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516935921}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -10}
+  m_LocalPosition: {x: 0.25, y: 2, z: -10}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 1221947390}
@@ -9692,7 +9692,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 736001723}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SwordSheath_emptyObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10633,6 +10633,8 @@ GameObject:
   - component: {fileID: 813495209}
   - component: {fileID: 813495210}
   - component: {fileID: 813495211}
+  - component: {fileID: 813495213}
+  - component: {fileID: 813495212}
   m_Layer: 0
   m_Name: DungeonDoorLocked_SPR
   m_TagString: Untagged
@@ -10729,6 +10731,47 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 2, y: 2}
+  m_EdgeRadius: 0
+--- !u!114 &813495212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813495208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3528bca9546e434d86f4b14fdf6d194, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _boxCollider: {fileID: 813495211}
+  _spriteRenderer: {fileID: 813495210}
+  _openDoor: {fileID: 21300000, guid: fbfb110f0914c014a930574475293704, type: 3}
+--- !u!61 &813495213
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813495208}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2, y: 2}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2, y: 4}
   m_EdgeRadius: 0
 --- !u!1 &815067896
 GameObject:
@@ -11502,6 +11545,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6639504540344501244, guid: cbb1553b6bbae8c4487baefe7082cc72,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6639504541325727826, guid: cbb1553b6bbae8c4487baefe7082cc72,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12584,7 +12632,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 984420293}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -10}
+  m_LocalPosition: {x: 0.25, y: 2, z: -10}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 1074078225}
@@ -12843,6 +12891,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1030997767}
   - component: {fileID: 1030997766}
+  - component: {fileID: 1030997768}
   m_Layer: 0
   m_Name: ItemHolder_SPR
   m_TagString: Untagged
@@ -12915,6 +12964,32 @@ Transform:
   m_Father: {fileID: 301823326}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1030997768
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030997765}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1.5}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.5}
+  m_EdgeRadius: 0
 --- !u!1 &1031616351
 GameObject:
   m_ObjectHideFlags: 0
@@ -13731,7 +13806,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1078968352}
   - component: {fileID: 1078968353}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15156,6 +15231,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _triggerCollider: {fileID: 1176411325}
   _normalCollider: {fileID: 1176411327}
+  _spriteRenderer: {fileID: 1176411322}
+  _rigidbody: {fileID: 1176411326}
 --- !u!61 &1176411325
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -23818,7 +23895,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787820938}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -10}
+  m_LocalPosition: {x: 0.25, y: 2, z: -10}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 940450506}
@@ -23914,7 +23991,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1817823603}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PickUpPoint_emptyObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26718,7 +26795,7 @@ GameObject:
   - component: {fileID: 2051475784}
   - component: {fileID: 2051475782}
   - component: {fileID: 2051475783}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sword_weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28992,7 +29069,7 @@ GameObject:
   - component: {fileID: 7789245191762991702}
   - component: {fileID: 7789245191762991701}
   - component: {fileID: 7789245191762991696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hero_player
   m_TagString: Player
   m_Icon: {fileID: 0}

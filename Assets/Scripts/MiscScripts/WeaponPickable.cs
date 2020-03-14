@@ -3,7 +3,6 @@
 public class WeaponPickable : MonoBehaviour, IPickable
 {
     [SerializeField] private GameObject _itemExplosionPrefab;
-    private readonly PickableType _pickableType = PickableType.Weapon;
 
 
     void Awake()
@@ -20,13 +19,13 @@ public class WeaponPickable : MonoBehaviour, IPickable
         Destroy(gameObject);
     }
 
-    public void Throw()
+    public void Throw(Vector2 throwDirection)
     {
 
     }
 
     public PickableType GetPickableType()
     {
-        return _pickableType;
+        return PickableType.Weapon;
     }
 }

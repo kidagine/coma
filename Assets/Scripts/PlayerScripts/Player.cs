@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator _animator = default;
     private GameObject _pickableObject;
     private GameObject _throwableObject;
-	private bool _canAttack;
+    private GameObject _interactableObject;
+    private bool _canAttack = true;
 
 
     void Awake()
@@ -19,11 +20,6 @@ public class Player : MonoBehaviour
         {
             _weaponObject.SetActive(true);
         }
-    }
-
-    private void Update()
-    {
-        Throw();
     }
 
     public void PickUp()
@@ -52,13 +48,35 @@ public class Player : MonoBehaviour
             UIManager.Instance.ShowUIPrompt(collision.transform);
             _pickableObject = collision.gameObject;
         }
+        if (collision.TryGetComponent(out IInteractable interactable))
+        {
+            if (interactable.GetInteractableType() == InteractableType.Door && _throwableObject != null)
+            {
+                UIManager.Instance.ShowUIPrompt(collision.transform);
+            }
+            _interactableObject = collision.gameObject;
+        }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out IPickable pickable))
         {
             UIManager.Instance.HideUIPrompt();
             _pickableObject = collision.gameObject;
+        }
+        if (collision.TryGetComponent(out IInteractable interactable))
+        {
+            UIManager.Instance.HideUIPrompt();
+            _interactableObject = null;
+        }
+    }
+
+    public void Interact()
+    {
+        if (_interactableObject != null)
+        {
+            _interactableObject.GetComponent<IInteractable>().Interact();
         }
     }
 
@@ -74,7 +92,6 @@ public class Player : MonoBehaviour
 
     public void PickUpKey()
     {
-        _canAttack = false;
         _pickableObject.transform.SetParent(_pickUpPoint);
         _pickableObject.transform.position = _pickUpPoint.position;
         _throwableObject = _pickableObject;
@@ -82,15 +99,13 @@ public class Player : MonoBehaviour
 
     public void Throw()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (_throwableObject != null)
         {
-            if (_throwableObject != null)
-            {
-                Debug.Log("throw");
-                _throwableObject.GetComponent<IPickable>().Throw();
-            }
+            Vector2 throwDirection = _playerMovement.CurrentDirection;
+            Debug.Log(throwDirection);
+            _throwableObject.GetComponent<IPickable>().Throw(throwDirection);
+            _throwableObject = null;
         }
-
     }
 
     public void Attack()

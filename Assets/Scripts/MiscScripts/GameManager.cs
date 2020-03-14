@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 	private Vector2 _lastPlayerPositionOnLoad;
 
 	public static GameManager Instance { get; private set; }
-
+	public bool IsGameStateFrozen { get; private set; }
 
 	void Awake()
 	{
@@ -33,12 +33,14 @@ public class GameManager : MonoBehaviour
 
 	public void FreezeGameState()
 	{
+		IsGameStateFrozen = true;
 		_playerInput.enabled = false;
 		Time.timeScale = 0.0f;
 	}
 
 	public void UnFreezeGameState()
 	{
+		IsGameStateFrozen = false;
 		_playerInput.enabled = true;
 		Time.timeScale = 1.0f;
 	}

@@ -14,6 +14,8 @@ public class PlayerInput : MonoBehaviour
 		_playerInputActions.PlayerControls.Movement.performed += SetMove;
 		_playerInputActions.PlayerControls.Attack.performed += Attack;
 		_playerInputActions.PlayerControls.Interact.performed += PickUp;
+		_playerInputActions.PlayerControls.Throw.performed += Throw;
+		_playerInputActions.PlayerControls.Interact.performed += Interact;
 	}
 
 	private void SetMove(InputAction.CallbackContext context)
@@ -36,6 +38,23 @@ public class PlayerInput : MonoBehaviour
 			_player.PickUp();
 		}
 	}
+
+	private void Throw(InputAction.CallbackContext context)
+	{
+		if (context.performed)
+		{
+			_player.Throw();
+		}
+	}
+
+	private void Interact(InputAction.CallbackContext context)
+	{
+		if (context.performed)
+		{
+			_player.Interact();
+		}
+	}
+
 
 	private void OnEnable()
 	{
