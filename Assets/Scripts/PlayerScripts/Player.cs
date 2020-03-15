@@ -30,14 +30,13 @@ public class Player : MonoBehaviour
             switch (pickable.GetPickableType())
             {
                 case PickableType.Weapon:
-                    pickable.Picked();
                     EquipWeapon();
                     break;
                 case PickableType.Key:
-                    pickable.Picked();
                     PickUpKey();
                     break;
             }
+            pickable.Picked();
         }
     }
 
@@ -53,8 +52,8 @@ public class Player : MonoBehaviour
             if (interactable.GetInteractableType() == InteractableType.Door && _throwableObject != null)
             {
                 UIManager.Instance.ShowUIPrompt(collision.transform);
+                _interactableObject = collision.gameObject;
             }
-            _interactableObject = collision.gameObject;
         }
     }
 
@@ -63,7 +62,7 @@ public class Player : MonoBehaviour
         if (collision.TryGetComponent(out IPickable pickable))
         {
             UIManager.Instance.HideUIPrompt();
-            _pickableObject = collision.gameObject;
+            _pickableObject = null;
         }
         if (collision.TryGetComponent(out IInteractable interactable))
         {
@@ -76,7 +75,14 @@ public class Player : MonoBehaviour
     {
         if (_interactableObject != null)
         {
-            _interactableObject.GetComponent<IInteractable>().Interact();
+            IInteractable interactable = _interactableObject.GetComponent<IInteractable>();
+            switch (interactable.GetInteractableType())
+            {
+                case InteractableType.Door:
+                    Destroy(_throwableObject);
+                    interactable.Interact();
+                    break;
+            }
         }
     }
 
@@ -92,9 +98,9 @@ public class Player : MonoBehaviour
 
     public void PickUpKey()
     {
-        _pickableObject.transform.SetParent(_pickUpPoint);
-        _pickableObject.transform.position = _pickUpPoint.position;
         _throwableObject = _pickableObject;
+        _throwableObject.transform.SetParent(_pickUpPoint);
+        _throwableObject.transform.position = _pickUpPoint.position;
     }
 
     public void Throw()
