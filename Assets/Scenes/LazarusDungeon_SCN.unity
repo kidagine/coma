@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139d39f268923944e85cab8bcb61d179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleExplosionPrefab: {fileID: 0}
 --- !u!61 &11032868
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12532,6 +12533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139d39f268923944e85cab8bcb61d179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleExplosionPrefab: {fileID: 0}
 --- !u!61 &982235039
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12937,7 +12939,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1744785309
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 3f90ae6037372144a984b28895ebbec2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -12977,7 +12979,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.25153196}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -12988,7 +12990,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.5}
+  m_Size: {x: 1, y: 0.9969361}
   m_EdgeRadius: 0
 --- !u!1 &1031616351
 GameObject:
@@ -13390,7 +13392,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1051478297}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.5, y: 0.75, z: 0}
+  m_LocalPosition: {x: 4, y: 0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 301823326}
@@ -13408,6 +13410,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139d39f268923944e85cab8bcb61d179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleExplosionPrefab: {fileID: 2079371275704286089, guid: 2e8ab9049be260546b09c968cc50d19c,
+    type: 3}
 --- !u!1 &1058854645
 GameObject:
   m_ObjectHideFlags: 0
@@ -13863,9 +13867,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1410352813
-  m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingLayerID: 1744785309
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 7a2d71dec0769ee4f8c435ed8deafbed, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -14759,6 +14763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139d39f268923944e85cab8bcb61d179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleExplosionPrefab: {fileID: 0}
 --- !u!61 &1138187195
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18053,6 +18058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139d39f268923944e85cab8bcb61d179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleExplosionPrefab: {fileID: 0}
 --- !u!61 &1341329421
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18772,7 +18778,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391956314}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.5, y: 1.75, z: 0}
+  m_LocalPosition: {x: 4, y: 1.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 301823326}
@@ -18790,6 +18796,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139d39f268923944e85cab8bcb61d179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleExplosionPrefab: {fileID: 2079371275704286089, guid: 2e8ab9049be260546b09c968cc50d19c,
+    type: 3}
 --- !u!1 &1405088864
 GameObject:
   m_ObjectHideFlags: 0
@@ -21730,47 +21738,82 @@ MonoBehaviour:
     name: HidePickup
     loop: 0
     playOnAwake: 0
+  - source: {fileID: 0}
+    clip: {fileID: 8300000, guid: 0256fee2455f17841aed6a661f20d3c1, type: 3}
+    volume: 1
+    pitch: 1
+    name: UseKey
+    loop: 0
+    playOnAwake: 0
+  - source: {fileID: 0}
+    clip: {fileID: 8300000, guid: 978ae753e7907b0408544e2766c39741, type: 3}
+    volume: 1
+    pitch: 1
+    name: PickUp
+    loop: 0
+    playOnAwake: 0
+  - source: {fileID: 0}
+    clip: {fileID: 8300000, guid: d3ffd94e8e06a3047a8b8d834ace59a7, type: 3}
+    volume: 1
+    pitch: 1
+    name: Throw
+    loop: 0
+    playOnAwake: 0
+  - source: {fileID: 0}
+    clip: {fileID: 8300000, guid: 04923dbb5ff544d499f9c5d107cff9ab, type: 3}
+    volume: 1
+    pitch: 1
+    name: WeaponAttack
+    loop: 0
+    playOnAwake: 0
+  - source: {fileID: 0}
+    clip: {fileID: 8300000, guid: f8d84306e114525429a40c2bc9376424, type: 3}
+    volume: 1
+    pitch: 1
+    name: ObstacleBreak
+    loop: 0
+    playOnAwake: 0
   _soundGroups:
   - name: PlayerFootsteps
     sounds:
     - source: {fileID: 0}
       clip: {fileID: 8300000, guid: f0e48a19ce307c94197d8ba2886b9f5b, type: 3}
-      volume: 0.25
+      volume: 0.4
       pitch: 1.2
       name: 
       loop: 0
       playOnAwake: 0
     - source: {fileID: 0}
       clip: {fileID: 8300000, guid: d19d73581c3b06d4c833e2d5a0a7e049, type: 3}
-      volume: 0.25
+      volume: 0.4
       pitch: 1.2
       name: 
       loop: 0
       playOnAwake: 0
     - source: {fileID: 0}
       clip: {fileID: 8300000, guid: e6dcbb5c801c7314a9f59b061028bbb3, type: 3}
-      volume: 0.25
+      volume: 0.4
       pitch: 1.2
       name: 
       loop: 0
       playOnAwake: 0
     - source: {fileID: 0}
       clip: {fileID: 8300000, guid: bab88c7d2dbf50044a465cf866f61a82, type: 3}
-      volume: 0.25
+      volume: 0.4
       pitch: 1.2
       name: 
       loop: 0
       playOnAwake: 0
     - source: {fileID: 0}
       clip: {fileID: 8300000, guid: 2ec47159b8444154897ac1348c2f7959, type: 3}
-      volume: 0.25
+      volume: 0.4
       pitch: 1.2
       name: 
       loop: 0
       playOnAwake: 0
     - source: {fileID: 0}
       clip: {fileID: 8300000, guid: f02e08a210addbc43a72fe4d95f41c87, type: 3}
-      volume: 0.25
+      volume: 0.4
       pitch: 1.2
       name: 
       loop: 0
@@ -22413,6 +22456,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139d39f268923944e85cab8bcb61d179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleExplosionPrefab: {fileID: 2079371275704286089, guid: 2e8ab9049be260546b09c968cc50d19c,
+    type: 3}
 --- !u!1 &1690042477
 GameObject:
   m_ObjectHideFlags: 0
@@ -24420,6 +24465,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139d39f268923944e85cab8bcb61d179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _obstacleExplosionPrefab: {fileID: 2079371275704286089, guid: 2e8ab9049be260546b09c968cc50d19c,
+    type: 3}
 --- !u!1 &1849770781
 GameObject:
   m_ObjectHideFlags: 0

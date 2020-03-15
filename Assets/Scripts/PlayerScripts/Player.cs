@@ -79,10 +79,11 @@ public class Player : MonoBehaviour
             switch (interactable.GetInteractableType())
             {
                 case InteractableType.Door:
+                    AudioManager.Instance.Play("UseKey");
                     Destroy(_throwableObject);
-                    interactable.Interact();
                     break;
             }
+            interactable.Interact();
         }
     }
 
@@ -98,6 +99,7 @@ public class Player : MonoBehaviour
 
     public void PickUpKey()
     {
+        AudioManager.Instance.Play("PickUp");
         _throwableObject = _pickableObject;
         _throwableObject.transform.SetParent(_pickUpPoint);
         _throwableObject.transform.position = _pickUpPoint.position;
@@ -107,6 +109,7 @@ public class Player : MonoBehaviour
     {
         if (_throwableObject != null)
         {
+            AudioManager.Instance.Play("Throw");
             Vector2 throwDirection = _playerMovement.CurrentDirection;
             Debug.Log(throwDirection);
             _throwableObject.GetComponent<IPickable>().Throw(throwDirection);
@@ -118,6 +121,7 @@ public class Player : MonoBehaviour
     {
 		if (_canAttack && _throwableObject == null)
 		{
+            AudioManager.Instance.Play("WeaponAttack");
 			_canAttack = false;
 			StartCoroutine(AttackCooldown(0.35f));
 		}
