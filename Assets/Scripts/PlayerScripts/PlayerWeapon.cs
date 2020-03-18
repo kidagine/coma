@@ -32,6 +32,7 @@ public class PlayerWeapon : MonoBehaviour
             {
                 _boxCollider2D.enabled = false;
                 attackable.Destroy();
+                _isAttacking = false;
             }
         }
     }

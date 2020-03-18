@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
 	[SerializeField] private GameObject _promptCanvas;
 	[SerializeField] private GameObject _itemCanvas;
-	
+	[SerializeField] private Text _coinsText;
+	private int coinsAmount;
+
 	public static UIManager Instance { get; private set; }
 
 
@@ -46,5 +49,11 @@ public class UIManager : MonoBehaviour
 	public void HideUIItem()
 	{
 		_itemCanvas.SetActive(false);
+	}
+
+	public void IncrementCoins()
+	{
+		coinsAmount++;
+		_coinsText.text = coinsAmount.ToString();
 	}
 }

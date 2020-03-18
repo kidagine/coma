@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class KeyPickable : MonoBehaviour, IPickable
+public class PotPickable : MonoBehaviour, IPickable
 {
+    [SerializeField] private Obstacle _obstacle;
     [SerializeField] private BoxCollider2D _triggerCollider;
     [SerializeField] private BoxCollider2D _normalCollider;
     [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -42,12 +43,7 @@ public class KeyPickable : MonoBehaviour, IPickable
         _normalCollider.enabled = true;
 
         yield return new WaitForSeconds(0.2f);
-        _rigidbody.isKinematic = true;
-        _rigidbody.velocity = Vector2.zero;
-        _spriteRenderer.sortingLayerName = "Midground";
-        gameObject.layer = LayerMask.NameToLayer("Default");
-        _normalCollider.enabled = false;
-        _triggerCollider.enabled = true;
+        _obstacle.Destroy();
     }
 
     public PickableType GetPickableType()
@@ -55,3 +51,4 @@ public class KeyPickable : MonoBehaviour, IPickable
         return PickableType.Key;
     }
 }
+

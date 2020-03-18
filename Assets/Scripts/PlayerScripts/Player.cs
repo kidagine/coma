@@ -111,7 +111,6 @@ public class Player : MonoBehaviour
         {
             AudioManager.Instance.Play("Throw");
             Vector2 throwDirection = _playerMovement.CurrentDirection;
-            Debug.Log(throwDirection);
             _throwableObject.GetComponent<IPickable>().Throw(throwDirection);
             _throwableObject = null;
         }
