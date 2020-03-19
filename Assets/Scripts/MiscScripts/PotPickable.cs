@@ -11,6 +11,8 @@ public class PotPickable : MonoBehaviour, IPickable
     private readonly int _throwForce = 600;
     private Vector2 _throwDirection;
     private bool _isThrown;
+    private bool _appliedThrowPhysics;
+
 
     public void Picked()
     {
@@ -21,12 +23,12 @@ public class PotPickable : MonoBehaviour, IPickable
 
     private void FixedUpdate()
     {
-        if (_isThrown)
+        if (_appliedThrowPhysics)
         {
             _rigidbody.isKinematic = false;
             _rigidbody.gravityScale = 4;
             _rigidbody.AddForce(_throwDirection * _throwForce);
-            _isThrown = false;
+            _appliedThrowPhysics = false;
         }
     }
 
@@ -39,6 +41,7 @@ public class PotPickable : MonoBehaviour, IPickable
     IEnumerator ThrowCoroutine()
     {
         _isThrown = true;
+        _appliedThrowPhysics = true;
         transform.SetParent(null);
         _normalCollider.enabled = true;
 
@@ -49,6 +52,18 @@ public class PotPickable : MonoBehaviour, IPickable
     public PickableType GetPickableType()
     {
         return PickableType.Key;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (_isThrown)
+        {
+            if (collision.TryGetComponent(out Obstacle obstacle))
+            {
+                obstacle.Destroy();
+            }
+            _obstacle.Destroy();
+        }
     }
 }
 

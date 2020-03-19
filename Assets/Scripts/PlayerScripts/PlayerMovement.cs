@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 	private readonly float _minimumToAngleValue = 1.0f;
 	private readonly float _maximumToAngleValue = 0.9f;
 	private readonly float _currentFootstepSpeed = 0.3f;
-	private readonly float _moveSpeed = 2.5f;
+	private readonly float _moveSpeed = 3.0f;
 	private Vector2 _movementDirection;
 	private float _footstepCooldown;
 
