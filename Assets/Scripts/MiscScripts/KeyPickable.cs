@@ -7,12 +7,20 @@ public class KeyPickable : MonoBehaviour, IPickable
     [SerializeField] private BoxCollider2D _normalCollider;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Rigidbody2D _rigidbody;
-    private readonly int _throwForce = 600;
+    private readonly int _throwForce = 900;
+    private Transform _shadow;
     private Vector2 _throwDirection;
+    private Vector2 _lastThrowPosition;
     private bool _isThrown;
+
+    void Start()
+    {
+        _shadow = transform.GetChild(0);
+    }
 
     public void Picked()
     {
+        _shadow.gameObject.SetActive(false);
         gameObject.layer = LayerMask.NameToLayer("Ignore Player");
         _spriteRenderer.sortingLayerName = "Foreground";
         _triggerCollider.enabled = false;
@@ -31,6 +39,7 @@ public class KeyPickable : MonoBehaviour, IPickable
 
     public void Throw(Vector2 throwDirection)
     {
+        _lastThrowPosition = transform.position;
         _throwDirection = throwDirection;
         StartCoroutine(ThrowCoroutine());
     }
@@ -42,12 +51,31 @@ public class KeyPickable : MonoBehaviour, IPickable
         _normalCollider.enabled = true;
 
         yield return new WaitForSeconds(0.2f);
+        _shadow.gameObject.SetActive(true);
         _rigidbody.isKinematic = true;
         _rigidbody.velocity = Vector2.zero;
         _spriteRenderer.sortingLayerName = "Midground";
         gameObject.layer = LayerMask.NameToLayer("Default");
         _normalCollider.enabled = false;
         _triggerCollider.enabled = true;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Pit"))
+        {
+            StartCoroutine(ReAppearCoroutine());
+        }
+    }
+
+    IEnumerator ReAppearCoroutine()
+    {
+        AudioManager.Instance.Play("ItemFall");
+        _spriteRenderer.enabled = false;
+        yield return new WaitForSeconds(0.4f);
+        AudioManager.Instance.Play("ItemReAppear");
+        transform.position = _lastThrowPosition;
+        _spriteRenderer.enabled = true;
     }
 
     public PickableType GetPickableType()

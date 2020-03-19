@@ -9,6 +9,7 @@ public class PotPickable : MonoBehaviour, IPickable
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Rigidbody2D _rigidbody;
     private readonly int _throwForce = 600;
+    private Transform _coinShadow;
     private Vector2 _throwDirection;
     private bool _isThrown;
     private bool _appliedThrowPhysics;
@@ -58,6 +59,7 @@ public class PotPickable : MonoBehaviour, IPickable
     {
         if (_isThrown)
         {
+            _isThrown = false;
             if (collision.TryGetComponent(out Obstacle obstacle))
             {
                 obstacle.Destroy();
