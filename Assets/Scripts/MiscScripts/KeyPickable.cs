@@ -60,9 +60,9 @@ public class KeyPickable : MonoBehaviour, IPickable
         _triggerCollider.enabled = true;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.collider.CompareTag("Pit"))
+        if (collision.CompareTag("Pit"))
         {
             StartCoroutine(ReAppearCoroutine());
         }
