@@ -51,14 +51,14 @@ public class Player : MonoBehaviour
     {
         if (collision.TryGetComponent(out IPickable pickable))
         {
-            UIManager.Instance.ShowUIPrompt(collision.transform);
+            UIManager.Instance.ShowUIPrompt(collision.transform, "Press X to pick up");
             _pickableObject = collision.gameObject;
         }
         if (collision.TryGetComponent(out IInteractable interactable))
         {
             if (interactable.GetInteractableType() == InteractableType.Door && _throwableObject != null && collision.GetComponent<Door>().IsLocked())
             {
-                UIManager.Instance.ShowUIPrompt(collision.transform);
+                UIManager.Instance.ShowUIPrompt(collision.transform, "Press X to open");
                 _interactableObject = collision.gameObject;
             }
         }
@@ -127,8 +127,10 @@ public class Player : MonoBehaviour
         _playerExpUI.SetExp(_playerStats.CurrentExp);
         if (_playerStats.CurrentExp >= _playerStats.ExpCap)
         {
+            _playerStats.CurrentExp = 0;
+            _playerExpUI.SetExp(_playerStats.CurrentExp);
             _playerStats.ExpCap += 20;
-            _playerExpUI.SetExpCap(_playerStats.ExpCap);
+            _playerExpUI.LevelUp(_playerStats.ExpCap);
         }
     }
 
@@ -141,6 +143,7 @@ public class Player : MonoBehaviour
             {
                 case InteractableType.Door:
                     AudioManager.Instance.Play("UseKey");
+                    UIManager.Instance.HideUIPrompt();
                     Destroy(_throwableObject);
                     break;
             }

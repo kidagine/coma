@@ -6,12 +6,14 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private Rigidbody2D _rigidbody;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
     private readonly float _movementChangeCoolDown = 1.2f;
     private readonly int _knockbackForce = 10;
     private readonly int _expAcquired = 10;
     private  int _walkSpeed = 2;
     private float _currentMovementChangeCoolDown;
     private int _health = 2;
+    private bool _isFrozen;
 
 
     private void Start()
@@ -22,10 +24,13 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        _currentMovementChangeCoolDown -= Time.deltaTime;
-        if (_currentMovementChangeCoolDown <= 0)
+        if (!_isFrozen)
         {
-            ChangeMovementDirection();
+            _currentMovementChangeCoolDown -= Time.deltaTime;
+            if (_currentMovementChangeCoolDown <= 0)
+            {
+                ChangeMovementDirection();
+            }
         }
     }
 
@@ -43,9 +48,11 @@ public class Enemy : MonoBehaviour
 
     public void Damaged(GameObject playerObject)
     {
+        AudioManager.Instance.Play("EnemyDamaged");
         _health--;
         if (_health <= 0)
         {
+            AudioManager.Instance.Play("EnemyDies");
             playerObject.GetComponent<Player>().IncreaseExp(_expAcquired);
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -65,5 +72,21 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         _rigidbody.velocity = Vector2.zero;
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(Respawn());
+    }
+
+    IEnumerator Respawn()
+    {
+        _rigidbody.velocity = Vector2.zero;
+        _isFrozen = true;
+        _spriteRenderer.enabled = false;
+        Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(1.0f);
+        _isFrozen = false;
+        _spriteRenderer.enabled = true;
     }
 }
