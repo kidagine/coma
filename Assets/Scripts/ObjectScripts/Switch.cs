@@ -21,6 +21,7 @@ public class Switch : MonoBehaviour
     {
         if (_isClosed)
         {
+            AudioManager.Instance.Play("BridgeOpen");
             OpenSwitch(true);
         }
     }
@@ -30,7 +31,6 @@ public class Switch : MonoBehaviour
         _activatorAnimator.SetBool("IsShowingUp", isSwitchOpen);
         if (isSwitchOpen)
         {
-            AudioManager.Instance.Play("BridgeOpen");
             _spriteRenderer.sprite = _openSwitchSprite;
         }
         else

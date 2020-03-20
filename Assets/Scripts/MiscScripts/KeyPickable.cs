@@ -8,6 +8,7 @@ public class KeyPickable : MonoBehaviour, IPickable
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Rigidbody2D _rigidbody;
     private readonly int _throwForce = 900;
+    private GameObject _player;
     private Transform _shadow;
     private Vector2 _throwDirection;
     private Vector2 _lastThrowPosition;
@@ -18,8 +19,9 @@ public class KeyPickable : MonoBehaviour, IPickable
         _shadow = transform.GetChild(0);
     }
 
-    public void Picked()
+    public void Picked(GameObject player)
     {
+        _player = player;
         _shadow.gameObject.SetActive(false);
         gameObject.layer = LayerMask.NameToLayer("Ignore Player");
         _spriteRenderer.sortingLayerName = "Foreground";
@@ -65,6 +67,10 @@ public class KeyPickable : MonoBehaviour, IPickable
         if (collision.CompareTag("Pit"))
         {
             StartCoroutine(ReAppearCoroutine());
+        }
+        if (collision.TryGetComponent(out Enemy enemy))
+        {
+            enemy.Damaged(_player);
         }
     }
 

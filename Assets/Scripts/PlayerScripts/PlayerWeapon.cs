@@ -34,6 +34,12 @@ public class PlayerWeapon : MonoBehaviour
                 attackable.Destroy();
                 _isAttacking = false;
             }
+            if (collision.TryGetComponent(out Enemy enemy))
+            {
+                _boxCollider2D.enabled = false;
+                enemy.Damaged(transform.root.gameObject);
+                _isAttacking = false;
+            }
         }
     }
 }

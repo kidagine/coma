@@ -13,7 +13,7 @@ public class WeaponPickable : MonoBehaviour, IPickable
         }
     }
 
-    public void Picked()
+    public void Picked(GameObject player)
     {
         Instantiate(_itemExplosionPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);

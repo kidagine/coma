@@ -1,13 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private PlayerStats _playerStats;
     [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] private PlayerWeapon _playerWeapon;
+    [SerializeField] private PlayerHealthUI _playerHealthUI;
+    [SerializeField] private PlayerExpUI _playerExpUI;
     [SerializeField] private GameObject _weaponObject;
+    [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private Transform _pickUpPoint;
     [SerializeField] private Animator _animator = default;
+    private readonly int _knockbackForce = 10;
     private GameObject _pickableObject;
     private GameObject _throwableObject;
     private GameObject _interactableObject;
@@ -36,7 +43,7 @@ public class Player : MonoBehaviour
                     PickUpKey();
                     break;
             }
-            pickable.Picked();
+            pickable.Picked(gameObject);
         }
     }
 
@@ -49,11 +56,15 @@ public class Player : MonoBehaviour
         }
         if (collision.TryGetComponent(out IInteractable interactable))
         {
-            if (interactable.GetInteractableType() == InteractableType.Door && _throwableObject != null)
+            if (interactable.GetInteractableType() == InteractableType.Door && _throwableObject != null && collision.GetComponent<Door>().IsLocked())
             {
                 UIManager.Instance.ShowUIPrompt(collision.transform);
                 _interactableObject = collision.gameObject;
             }
+        }
+        if (collision.TryGetComponent(out Enemy enemy))
+        {
+            Damaged(collision.gameObject);
         }
     }
 
@@ -68,6 +79,56 @@ public class Player : MonoBehaviour
         {
             UIManager.Instance.HideUIPrompt();
             _interactableObject = null;
+        }
+    }
+
+    private void Damaged(GameObject enemyObject)
+    {
+        AudioManager.Instance.Play("Damaged");
+        _playerStats.Health--;
+        _playerHealthUI.SetHearts(_playerStats.Health);
+        if (_playerStats.Health <= 0)
+        {
+            Destroy(gameObject);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        KnockBack(enemyObject);
+    }
+
+    private void KnockBack(GameObject attackObject)
+    {
+        _playerMovement.enabled = false;
+        Vector2 direction = (transform.position - attackObject.transform.position).normalized;
+        Vector2 strictDirection = new Vector2(Mathf.Round(direction.x * Convert.ToInt32(Mathf.Abs(direction.x) > Mathf.Abs(direction.y))), Mathf.Round(direction.y * Convert.ToInt32(Mathf.Abs(direction.y) > Mathf.Abs(direction.x))));
+        _rigidbody.velocity = strictDirection * _knockbackForce;
+        StartCoroutine(ResetVelocity());
+    }
+
+    IEnumerator ResetVelocity()
+    {
+        yield return new WaitForSeconds(0.1f);
+        _playerMovement.enabled = true;
+        _rigidbody.velocity = Vector2.zero;
+    }
+
+    public void Heal()
+    {
+        AudioManager.Instance.Play("Healed");
+        if (_playerStats.Health < 3)
+        {
+            _playerStats.Health++;
+            _playerHealthUI.SetHearts(_playerStats.Health);
+        }
+    }
+
+    public void IncreaseExp(int expAcquired)
+    {
+        _playerStats.CurrentExp += expAcquired;
+        _playerExpUI.SetExp(_playerStats.CurrentExp);
+        if (_playerStats.CurrentExp >= _playerStats.ExpCap)
+        {
+            _playerStats.ExpCap += 20;
+            _playerExpUI.SetExpCap(_playerStats.ExpCap);
         }
     }
 

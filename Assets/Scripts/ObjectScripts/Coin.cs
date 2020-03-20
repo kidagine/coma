@@ -10,7 +10,6 @@ public class Coin : MonoBehaviour
             AudioManager.Instance.Play("Coin");
             Destroy(gameObject);
         }
-
     }
 
     private void OnTriggerStay2D(Collider2D collision)
