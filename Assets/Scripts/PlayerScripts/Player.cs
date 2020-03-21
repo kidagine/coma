@@ -62,7 +62,11 @@ public class Player : MonoBehaviour
                 _interactableObject = collision.gameObject;
             }
         }
-        if (collision.TryGetComponent(out Enemy enemy))
+        if (collision.TryGetComponent(out IEnemy enemy))
+        {
+            Damaged(collision.gameObject);
+        }
+        if (collision.CompareTag("Arrow"))
         {
             Damaged(collision.gameObject);
         }

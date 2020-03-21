@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Crab : MonoBehaviour, IEnemy
 {
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private Rigidbody2D _rigidbody;
@@ -81,6 +81,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator Respawn()
     {
+        yield return null;
         _rigidbody.velocity = Vector2.zero;
         _isFrozen = true;
         _spriteRenderer.enabled = false;

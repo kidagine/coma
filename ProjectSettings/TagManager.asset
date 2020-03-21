@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Pit
+  - Arrow
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - Player
   - Ignore Player
   - Ignore Throwable
-  - 
+  - Arrow
   - 
   - 
   - 

@@ -68,7 +68,7 @@ public class KeyPickable : MonoBehaviour, IPickable
         {
             StartCoroutine(ReAppearCoroutine());
         }
-        if (collision.TryGetComponent(out Enemy enemy))
+        if (collision.TryGetComponent(out IEnemy enemy))
         {
             enemy.Damaged(_player);
         }

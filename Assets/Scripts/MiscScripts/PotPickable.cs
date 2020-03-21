@@ -66,7 +66,7 @@ public class PotPickable : MonoBehaviour, IPickable
             {
                 obstacle.Destroy();
             }
-            if (collision.TryGetComponent(out Enemy enemy))
+            if (collision.TryGetComponent(out IEnemy enemy))
             {
                 enemy.Damaged(_player);
             }
