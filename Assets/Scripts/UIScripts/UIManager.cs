@@ -3,8 +3,10 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+	[SerializeField] private GameObject _bonfireCanvas;
 	[SerializeField] private GameObject _promptCanvas;
 	[SerializeField] private GameObject _itemCanvas;
+	[SerializeField] private Button _bonfireRestButton;
 	[SerializeField] private Text _coinsText;
 	[SerializeField] private Text _promptText;
 	private int coinsAmount;
@@ -57,5 +59,11 @@ public class UIManager : MonoBehaviour
 	{
 		coinsAmount++;
 		_coinsText.text = coinsAmount.ToString();
+	}
+
+	public void ShowBonfireUI()
+	{
+		_bonfireCanvas.SetActive(true);
+		_bonfireRestButton.Select(); 
 	}
 }

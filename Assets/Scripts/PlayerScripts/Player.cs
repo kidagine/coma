@@ -61,6 +61,11 @@ public class Player : MonoBehaviour
                 UIManager.Instance.ShowUIPrompt(collision.transform, "Press X to open");
                 _interactableObject = collision.gameObject;
             }
+            if (interactable.GetInteractableType() == InteractableType.Bonfire)
+            {
+                UIManager.Instance.ShowUIPrompt(collision.transform, "Press X to rest");
+                _interactableObject = collision.gameObject;
+            }
         }
         if (collision.TryGetComponent(out IEnemy enemy))
         {
@@ -149,6 +154,14 @@ public class Player : MonoBehaviour
                     AudioManager.Instance.Play("UseKey");
                     UIManager.Instance.HideUIPrompt();
                     Destroy(_throwableObject);
+                    break;
+                case InteractableType.Bonfire:
+                    UIManager.Instance.HideUIPrompt();
+                    AudioManager.Instance.FadeOut("HubWorld");
+                    AudioManager.Instance.Play("Bonfire");
+                    _playerMovement.enabled = false;
+                    _animator.SetTrigger("Rest");
+                    Heal();
                     break;
             }
             interactable.Interact();

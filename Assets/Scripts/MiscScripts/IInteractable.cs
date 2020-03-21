@@ -1,4 +1,4 @@
-﻿public enum InteractableType { Door }
+﻿public enum InteractableType { Door, Bonfire }
 
 public interface IInteractable
 {
