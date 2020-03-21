@@ -38,8 +38,16 @@ public class Archer : MonoBehaviour, IEnemy
 
     public void DetectedPlayer(Transform player)
     {
-        _hasDetectedPlayer = true;
-        _player = player;
+        if (!_hasDetectedPlayer)
+        {
+            _hasDetectedPlayer = true;
+            _player = player;
+        }
+        else
+        {
+            _hasDetectedPlayer = false;
+            _currentFireArrowCooldown = _fireArrowCooldown;
+        }
     }
 
     public void Damaged(GameObject playerObject)
